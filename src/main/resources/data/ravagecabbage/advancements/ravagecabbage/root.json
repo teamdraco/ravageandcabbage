@@ -1,0 +1,28 @@
+{
+	"display": {
+		"icon": {
+			"item": "ravagecabbage:cabbage"
+		},
+		"title": {
+			"translate": "advancements.ravagecabbage.root.title"
+		},
+		"description": {
+			"translate": "advancements.ravagecabbage.root.description"
+		},
+		"background": "minecraft:textures/gui/advancements/backgrounds/husbandry.png",
+		"show_toast": "false",
+		"announce_to_chat": "true"
+	},
+	"criteria": {
+		"cabbage": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"item": [
+					{
+						"item": "ravagecabbage:cabbage"
+					}
+				]
+			}
+		}
+	}
+}
