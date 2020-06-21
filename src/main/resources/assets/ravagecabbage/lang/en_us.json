@@ -1,4 +1,8 @@
 {
-  "item.ravagecabbage.cabbage": "Cabbage",
-  "block.ravagecabbage.cabbage_crop": "Cabbage Seeds"
+	"item.ravagecabbage.cabbage": "Cabbage",
+	"block.ravagecabbage.cabbage_crop": "Cabbage Seeds",
+	"itemGroup.ravagecabbage_tab": "Ravage & Cabbage Items",
+	"advancements.ravagecabbage.root.title": "My Cabbages!",
+	"advancements.ravagecabbage.root.description": "Collect your first cabbage",
+	"item.ravagecabbage.ravager_milk": "Ravager Milk"
 }
