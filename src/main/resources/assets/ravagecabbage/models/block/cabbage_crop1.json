@@ -1,6 +1,5 @@
 {
 	"parent": "block/block",
-	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "ravagecabbage:block/cabbage_crop",
 		"particle": "ravagecabbage:block/cabbage_crop"
