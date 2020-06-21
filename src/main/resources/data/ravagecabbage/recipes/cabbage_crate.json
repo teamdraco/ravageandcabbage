@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    "ccc",
+    "ccc"
+  ],
+  "key": {
+    "c": {
+      "item": "ravagecabbage:cabbage"
+    }
+  },
+  "result": {
+    "item": "ravagecabbage:cabbage_crate"
+  }
+}
