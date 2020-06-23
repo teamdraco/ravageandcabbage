@@ -15,7 +15,7 @@ public class RCFood extends Item {
 	}
 	
 	public RCFood(int amount, float saturation) {
-		this(new Item.Properties().group(RCItemGroup.instance).food(new Food.Builder().hunger(amount).saturation(saturation).build()));
+		this(new Item.Properties().group(RCItemGroup.INSTANCE).food(new Food.Builder().hunger(amount).saturation(saturation).build()));
 	}
 
 	@Override
@@ -23,9 +23,9 @@ public class RCFood extends Item {
 		if(entity instanceof PlayerEntity) onFoodEaten(stack, world, (PlayerEntity) entity);
 		return super.onItemUseFinish(stack, world, entity);
 	}
-	
+
 	protected void onFoodEaten(ItemStack stack, World world, PlayerEntity entity) {
-		
+
 	}
 
 }

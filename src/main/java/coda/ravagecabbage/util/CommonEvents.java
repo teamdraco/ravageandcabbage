@@ -11,7 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@Mod.EventBusSubscriber(modid = RavageCabbage.modid, bus = Bus.FORGE)
+@Mod.EventBusSubscriber(modid = RavageCabbage.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
 
     @SubscribeEvent

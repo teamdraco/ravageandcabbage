@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@Mod.EventBusSubscriber(modid = RavageCabbage.modid, bus = Bus.MOD)
+@Mod.EventBusSubscriber(modid = RavageCabbage.MOD_ID, bus = Bus.MOD)
 public class BlockInit {
 	
 	public static final Block CABBAGE_CROP = new CabbageCrop(Block.Properties.from(Blocks.POTATOES)).setRegistryName("cabbage_crop");
