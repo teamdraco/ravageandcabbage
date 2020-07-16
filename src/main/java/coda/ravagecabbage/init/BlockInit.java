@@ -28,7 +28,7 @@ public class BlockInit {
 	
 	@SubscribeEvent
 	public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new BlockItem(CABBAGE_CRATE, new Item.Properties().group(RCItemGroup.instance)).setRegistryName("cabbage_crate"));
+		event.getRegistry().register(new BlockItem(CABBAGE_CRATE, new Item.Properties().group(RCItemGroup.INSTANCE)).setRegistryName("cabbage_crate"));
 	}
 	
 }
