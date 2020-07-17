@@ -31,8 +31,8 @@ import java.util.UUID;
 
 public class CabbageRavagerEntity extends RavagerEntity {
     private static final DataParameter<Boolean> BABY = EntityDataManager.createKey(CabbageRavagerEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(TameableEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(CabbageRavagerEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(CabbageRavagerEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     protected int growingAge;
 
     public CabbageRavagerEntity(EntityType<? extends CabbageRavagerEntity> type, World world) {
@@ -193,8 +193,10 @@ public class CabbageRavagerEntity extends RavagerEntity {
     }
 
     public void onDeath(DamageSource cause) {
-        if (!this.world.isRemote && this.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && this.getOwner() instanceof ServerPlayerEntity) {
-            this.getOwner().sendMessage(this.getCombatTracker().getDeathMessage());
+        LivingEntity owner = this.getOwner();
+
+        if (!this.world.isRemote && this.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && owner instanceof ServerPlayerEntity) {
+            owner.sendMessage(this.getCombatTracker().getDeathMessage());
         }
 
         super.onDeath(cause);

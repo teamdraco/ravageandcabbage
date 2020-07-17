@@ -24,5 +24,4 @@ public class RavageCabbage {
             return new ItemStack(ItemInit.CABBAGE);
 		}
 	}
-	
 }
