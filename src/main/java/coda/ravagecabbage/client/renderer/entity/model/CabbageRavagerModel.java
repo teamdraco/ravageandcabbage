@@ -4,6 +4,7 @@ import coda.ravagecabbage.entity.CabbageRavagerEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.monster.RavagerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -94,36 +95,38 @@ public class CabbageRavagerModel extends AgeableModel<CabbageRavagerEntity> {
       super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
       int i = entityIn.func_213684_dX();
       int j = entityIn.func_213687_eg();
+      int k = 20;
       int l = entityIn.func_213683_l();
+      int i1 = 10;
       if (l > 0) {
-         float f = this.triangleWave((float) l - partialTick, 10.0F);
+         float f = this.triangleWave((float)l - partialTick, 10.0F);
          float f1 = (1.0F + f) * 0.5F;
          float f2 = f1 * f1 * f1 * 12.0F;
          float f3 = f2 * MathHelper.sin(this.neck.rotateAngleX);
          this.neck.rotationPointZ = -6.5F + f2;
          this.neck.rotationPointY = -7.0F - f3;
-         float f4 = MathHelper.sin(((float) l - partialTick) / 10.0F * (float) Math.PI * 0.25F);
-         this.jaw.rotateAngleX = ((float) Math.PI / 2F) * f4;
+         float f4 = MathHelper.sin(((float)l - partialTick) / 10.0F * (float)Math.PI * 0.25F);
+         this.jaw.rotateAngleX = ((float)Math.PI / 2F) * f4;
          if (l > 5) {
-            this.jaw.rotateAngleX = MathHelper.sin(((float) (-4 + l) - partialTick) / 4.0F) * (float) Math.PI * 0.4F;
+            this.jaw.rotateAngleX = MathHelper.sin(((float)(-4 + l) - partialTick) / 4.0F) * (float)Math.PI * 0.4F;
          } else {
-            this.jaw.rotateAngleX = 0.15707964F * MathHelper.sin((float) Math.PI * ((float) l - partialTick) / 10.0F);
+            this.jaw.rotateAngleX = 0.15707964F * MathHelper.sin((float)Math.PI * ((float)l - partialTick) / 10.0F);
          }
       } else {
          float f5 = -1.0F;
-         float f6 = f5 * MathHelper.sin(this.neck.rotateAngleX);
+         float f6 = -1.0F * MathHelper.sin(this.neck.rotateAngleX);
          this.neck.rotationPointX = 0.0F;
          this.neck.rotationPointY = -7.0F - f6;
          this.neck.rotationPointZ = 5.5F;
          boolean flag = i > 0;
          this.neck.rotateAngleX = flag ? 0.21991149F : 0.0F;
-         this.jaw.rotateAngleX = (float) Math.PI * (flag ? 0.05F : 0.01F);
+         this.jaw.rotateAngleX = (float)Math.PI * (flag ? 0.05F : 0.01F);
          if (flag) {
-            double d0 = (double) i / 40.0D;
-            this.neck.rotationPointX = (float) Math.sin(d0 * 10.0D) * 3.0F;
+            double d0 = (double)i / 40.0D;
+            this.neck.rotationPointX = (float)Math.sin(d0 * 10.0D) * 3.0F;
          } else if (j > 0) {
-            float f7 = MathHelper.sin(((float) (20 - j) - partialTick) / 20.0F * (float) Math.PI * 0.25F);
-            this.jaw.rotateAngleX = ((float) Math.PI / 2F) * f7;
+            float f7 = MathHelper.sin(((float)(20 - j) - partialTick) / 20.0F * (float)Math.PI * 0.25F);
+            this.jaw.rotateAngleX = ((float)Math.PI / 2F) * f7;
          }
       }
    }

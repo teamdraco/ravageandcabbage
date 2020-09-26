@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 @Mod.EventBusSubscriber(modid = RavageCabbage.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
 
-	
 	@SubscribeEvent
     public static void processInteract(PlayerInteractEvent.EntityInteract event) {
         ItemStack itemstack = event.getPlayer().getHeldItem(event.getHand());
@@ -33,9 +32,9 @@ public class CommonEvents {
                     itemstack.shrink(1);
                 }
                 if (itemstack.isEmpty()) {
-                    event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ItemInit.RAVAGER_MILK));
-                } else if (!event.getPlayer().inventory.addItemStackToInventory(new ItemStack(ItemInit.RAVAGER_MILK))) {
-                    event.getPlayer().dropItem(new ItemStack(ItemInit.RAVAGER_MILK), false);
+                    event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ItemInit.RAVAGER_MILK.get()));
+                } else if (!event.getPlayer().inventory.addItemStackToInventory(new ItemStack(ItemInit.RAVAGER_MILK.get()))) {
+                    event.getPlayer().dropItem(new ItemStack(ItemInit.RAVAGER_MILK.get()), false);
                 }
                 event.setCanceled(true);
             }

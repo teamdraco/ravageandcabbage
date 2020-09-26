@@ -17,11 +17,9 @@
 		"cabbage": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
-				"item": [
-					{
-						"item": "ravagecabbage:cabbage"
-					}
-				]
+				"item": {
+					"item": "ravagecabbage:cabbage"
+				}
 			}
 		}
 	}

@@ -28,7 +28,7 @@ public class CabbageCrop extends CropsBlock {
 	
 	@Override
 	protected IItemProvider getSeedsItem() {
-		return ItemInit.CABBAGE_SEEDS;
+		return ItemInit.CABBAGE_SEEDS.get();
 	}
 	
 	@Override
