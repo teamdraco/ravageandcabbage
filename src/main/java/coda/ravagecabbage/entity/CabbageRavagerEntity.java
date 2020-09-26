@@ -56,7 +56,7 @@ public class CabbageRavagerEntity extends AnimalEntity {
     private int stunTick;
     private int roarTick;
 
-    public CabbageRavagerEntity(EntityType<? extends CabbageRavagerEntity> type, World world) {
+    public CabbageRavagerEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
         this.stepHeight = 1.0F;
         this.experienceValue = 20;
