@@ -1,11 +1,11 @@
-package superlord.ravagecabbage.entity.render;
+package superlord.ravagecabbage.client.render;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.entity.CabbagerEntity;
-import superlord.ravagecabbage.entity.model.CabbagerModel;
+import superlord.ravagecabbage.client.model.CabbagerModel;
 
 public class CabbagerRenderer extends MobRenderer<CabbagerEntity, CabbagerModel<CabbagerEntity>> {
 

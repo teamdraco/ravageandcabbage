@@ -1,4 +1,4 @@
-package superlord.ravagecabbage.entity.model;
+package superlord.ravagecabbage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;

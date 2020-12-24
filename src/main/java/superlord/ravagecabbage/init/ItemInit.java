@@ -15,7 +15,7 @@ public class ItemInit {
 	
     public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, RavageAndCabbage.MOD_ID);
 
-    public static final RegistryObject<Item> CABBAGE = REGISTER.register("cabbage", () -> new Item(new Item.Properties().group(RavageAndCabbage.GROUP).food(new Food.Builder().hunger(3).saturation(0.3F).meat().build())))));
+    public static final RegistryObject<Item> CABBAGE = REGISTER.register("cabbage", () -> new Item(new Item.Properties().group(RavageAndCabbage.GROUP).food(new Food.Builder().hunger(3).saturation(0.3F).meat().build())));
     public static final RegistryObject<Item> CABBAGE_SEEDS = REGISTER.register("cabbage_seeds", () -> new BlockNamedItem(BlockInit.CABBAGE_CROP.get(), new Item.Properties().group(RavageAndCabbage.GROUP)));
     public static final RegistryObject<Item> RAVAGER_MILK = REGISTER.register("ravager_milk", () -> new RavagerMilkItem(new Item.Properties().group(RavageAndCabbage.GROUP).maxStackSize(1)));
     public static final RegistryObject<Item> CABBAGE_THROWABLE = REGISTER.register("throwable_cabbage", () -> new ThrowableCabbageItem(new Item.Properties().maxStackSize(1)));

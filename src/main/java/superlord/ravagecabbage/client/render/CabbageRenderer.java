@@ -1,4 +1,4 @@
-package superlord.ravagecabbage.entity.render;
+package superlord.ravagecabbage.client.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

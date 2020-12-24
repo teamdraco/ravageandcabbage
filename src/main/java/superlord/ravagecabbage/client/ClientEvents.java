@@ -10,9 +10,9 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import superlord.ravagecabbage.RavageAndCabbage;
-import superlord.ravagecabbage.entity.render.CabbageRenderer;
-import superlord.ravagecabbage.entity.render.CabbagerRenderer;
-import superlord.ravagecabbage.entity.render.RavagerRenderer;
+import superlord.ravagecabbage.client.render.CabbageRenderer;
+import superlord.ravagecabbage.client.render.CabbagerRenderer;
+import superlord.ravagecabbage.client.render.RavagerRenderer;
 import superlord.ravagecabbage.init.EntityInit;
 import superlord.ravagecabbage.items.RavageAndCabbageSpawnEggItem;
 

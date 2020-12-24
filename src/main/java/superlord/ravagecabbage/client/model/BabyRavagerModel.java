@@ -1,4 +1,4 @@
-package superlord.ravagecabbage.entity.model;
+package superlord.ravagecabbage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -97,8 +97,8 @@ public class BabyRavagerModel<T extends Entity> extends EntityModel<RavageAndCab
 
     @Override
     public void setRotationAngles(RavageAndCabbageRavagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-		this.head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
+    	this.neck.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+		this.neck.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 		float f = 0.4F * limbSwingAmount;
 		this.legRight.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * f;
 		this.legLeft.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * f;

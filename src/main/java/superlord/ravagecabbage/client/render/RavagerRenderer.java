@@ -1,4 +1,4 @@
-package superlord.ravagecabbage.entity.render;
+package superlord.ravagecabbage.client.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -10,8 +10,8 @@ import net.minecraft.util.ResourceLocation;
 import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.entity.CabbagerEntity;
 import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
-import superlord.ravagecabbage.entity.model.BabyRavagerModel;
-import superlord.ravagecabbage.entity.model.RCRavagerModel;
+import superlord.ravagecabbage.client.model.BabyRavagerModel;
+import superlord.ravagecabbage.client.model.RCRavagerModel;
 
 public class RavagerRenderer extends MobRenderer<RavageAndCabbageRavagerEntity, EntityModel<RavageAndCabbageRavagerEntity>> {
 
