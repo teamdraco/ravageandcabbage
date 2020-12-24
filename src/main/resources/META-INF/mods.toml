@@ -5,7 +5,7 @@ license="All rights reserved"
 modId="ravageandcabbage" #mandatory
 version="1.0.0" #mandatory
 displayName="Ravage & Cabbage" #mandatory
-credits="Coda (Assets) & superlord9362 (Code)" #optional
+credits="Coda (Assets), Larry (Building and Idea), & superlord9362 (Code)" #optional
 authors="superlord9362" #optional
 description='''Temporary description'''
 [[dependencies.examplemod]]
