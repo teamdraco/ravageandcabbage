@@ -7,5 +7,9 @@
 	"item.ravageandcabbage.cabbager_spawn_egg": "Spawn Cabbager",
 	"item.ravageandcabbage.ravager_spawn_egg": "Spawn Ravager",
 	
+	"entity.ravageandcabbage.ravager": "Tamed Ravager",
+	"entity.ravageandcabbage.cabbager": "Cabbager",
+	"entity.ravageandcabbage.cabbage": "Thrown Cabbage",
+	
 	"block.ravageandcabbage.cabbage_crop": "Cabbage Crop"
 }

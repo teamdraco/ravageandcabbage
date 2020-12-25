@@ -24,7 +24,7 @@ public class ClientEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.CABBAGE.get(), CabbageRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityInit.CABBAGER.get(), CabbagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityInit.RAVAGER.get(), manager -> new RavagerRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(EntityInit.RAVAGER.get(), manager -> new RavagerRenderer()); 
 	}
 	
 	@SubscribeEvent

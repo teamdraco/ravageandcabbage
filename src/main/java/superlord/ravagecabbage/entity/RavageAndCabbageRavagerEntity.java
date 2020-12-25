@@ -1,5 +1,6 @@
 package superlord.ravagecabbage.entity;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -7,12 +8,12 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -35,12 +36,18 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -52,10 +59,8 @@ import net.minecraft.pathfinding.WalkNodeProcessor;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.RangedInteger;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.TickRangeConverter;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -67,28 +72,40 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
+import superlord.ravagecabbage.common.inventory.RavagerContainer;
 import superlord.ravagecabbage.init.EntityInit;
 import superlord.ravagecabbage.init.ItemInit;
 
-public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAngerable {
+public class RavageAndCabbageRavagerEntity extends TameableEntity implements IInventoryChangedListener, INamedContainerProvider {
 	private static final Predicate<Entity> field_213690_b = (p_213685_0_) -> {
 		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RavageAndCabbageRavagerEntity);
-	};   private static final DataParameter<Byte> STATUS = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.BYTE);
-
-	protected Inventory horseChest;
-	private static final DataParameter<Integer> field_234232_bz_ = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.VARINT);
-	private static final RangedInteger field_234230_bG_ = TickRangeConverter.convertRange(20, 39);
-	private UUID field_234231_bH_;
-
+	};
+	private static final DataParameter<Boolean> SADDLE = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> DATA_ID_CHEST = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.BOOLEAN);
 	private int attackTick;
 	private int stunTick;
 	private int roarTick;
-	public float ridingXZ;
-	public float ridingY = 1;
+	public Inventory inventory;
 
 	public RavageAndCabbageRavagerEntity(EntityType<? extends RavageAndCabbageRavagerEntity> type, World worldIn) {
 		super(type, worldIn);
-		this.setTamed(false);
+		this.initChest();
+	}
+
+	@Override
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(SADDLE, false);
+		this.dataManager.register(DATA_ID_CHEST, false);
+	}
+
+	public boolean hasChest() {
+		return this.dataManager.get(DATA_ID_CHEST);
+	}
+
+	public void setChested(boolean chested) {
+		this.dataManager.set(DATA_ID_CHEST, chested);
 	}
 
 	protected void registerGoals() {
@@ -108,30 +125,206 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		}
 	}
 
-	public static AttributeModifierMap.MutableAttribute func_234233_eS_() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 100.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D).createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.75D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 12.0D).createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.5D).createMutableAttribute(Attributes.FOLLOW_RANGE, 32.0D);
-	}
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
 
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(STATUS, (byte)0);
-		this.dataManager.register(field_234232_bz_, 0);
+		if (this.hasChest()) {
+			if (!this.world.isRemote) {
+				this.entityDropItem(new ItemStack(Blocks.CHEST, 1));
+			}
+
+			this.setChested(false);
+		}
 	}
 
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
+		compound.putBoolean("Chest", this.hasChest());
 		compound.putInt("Age", this.getGrowingAge());
 		compound.putInt("AttackTick", this.attackTick);
 		compound.putInt("StunTick", this.stunTick);
 		compound.putInt("RoarTick", this.roarTick);
+		if (this.hasChest()) {
+			ListNBT nbttaglist = new ListNBT();
+
+			for (int i = 2; i < this.inventory.getSizeInventory(); ++i) {
+				ItemStack itemstack = this.inventory.getStackInSlot(i);
+
+				if (!itemstack.isEmpty()) {
+					CompoundNBT nbttagcompound = new CompoundNBT();
+					nbttagcompound.putByte("Slot", (byte) i);
+					itemstack.write(nbttagcompound);
+					nbttaglist.add(nbttagcompound);
+				}
+			}
+
+			compound.put("Items", nbttaglist);
+		}
 	}
 
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
+		this.setChested(compound.getBoolean("Chest"));
 		this.setGrowingAge(compound.getInt("Age"));
 		this.attackTick = compound.getInt("AttackTick");
 		this.stunTick = compound.getInt("StunTick");
 		this.roarTick = compound.getInt("RoarTick");
+		if (this.hasChest()) {
+			ListNBT nbttaglist = compound.getList("Items", 10);
+			this.initChest();
+
+			for (int i = 0; i < nbttaglist.size(); ++i) {
+				CompoundNBT nbttagcompound = nbttaglist.getCompound(i);
+				int j = nbttagcompound.getByte("Slot") & 255;
+
+				if (j >= 2 && j < this.inventory.getSizeInventory()) {
+					this.inventory.setInventorySlotContents(j, ItemStack.read(nbttagcompound));
+				}
+			}
+		}
+
+		if (!this.world.isRemote) this.dataManager.set(SADDLE, !this.inventory.getStackInSlot(0).isEmpty());
+	}
+
+	protected void initChest() {
+		Inventory inv = this.inventory;
+		this.inventory = new Inventory(this.hasChest() ? 17 : 1);
+
+		if (inv != null) {
+			inv.removeListener(this);
+			int i = Math.min(inv.getSizeInventory(), this.inventory.getSizeInventory());
+
+			for (int j = 0; j < i; ++j) {
+				ItemStack itemstack = inv.getStackInSlot(j);
+
+				if (!itemstack.isEmpty()) {
+					this.inventory.setInventorySlotContents(j, itemstack.copy());
+				}
+			}
+		}
+
+		this.inventory.addListener(this);
+		if (!this.world.isRemote) this.dataManager.set(SADDLE, !this.inventory.getStackInSlot(0).isEmpty());
+	}
+	
+	public boolean isSaddled() {
+		return this.dataManager.get(SADDLE);
+	}
+
+	@Override
+	public void setTamed(boolean tamed) {
+		super.setTamed(tamed);
+		if (tamed) this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(60);
+		else this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(40);
+	}
+
+	@Override
+	public boolean canBeSteered() {
+		return !inventory.getStackInSlot(0).isEmpty();
+	}
+
+	@Override
+	public void updatePassenger(Entity passenger) {
+		if (this.isPassenger(passenger)) {
+			if (world.isRemote && passenger instanceof PlayerEntity && Minecraft.getInstance().player.isSneaking()) {
+				removePassenger(passenger);
+				return;
+			}
+			float f;
+			int i = this.getPassengers().indexOf(passenger);
+			if (i == 0) f = 0.2F;
+			else f = -0.6F;
+			Vector3d vec3d = (new Vector3d(f, 0.0D, 0.0D)).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
+			passenger.setPosition(this.getPosX() + vec3d.x, this.getPosY() + this.getMountedYOffset() + passenger.getYOffset(), this.getPosZ() + vec3d.z);
+		}
+	}
+
+	public void travel(Vector3d motion) {
+		if (this.getControllingPassenger() != null && this.canBeSteered() && !inventory.getStackInSlot(0).isEmpty()) {
+			LivingEntity entitylivingbase = (LivingEntity) this.getControllingPassenger();
+			this.rotationYaw = entitylivingbase.rotationYaw;
+			this.prevRotationYaw = this.rotationYaw;
+			this.rotationPitch = entitylivingbase.rotationPitch * 0.5F;
+			this.setRotation(this.rotationYaw, this.rotationPitch);
+			this.renderYawOffset = this.rotationYaw;
+			this.rotationYawHead = this.renderYawOffset;
+			motion = new Vector3d(entitylivingbase.moveStrafing * 0.5F, motion.y, entitylivingbase.moveForward);
+			this.stepHeight = 1.0F;
+			if (motion.z <= 0.0F) motion = motion.mul(0, 0, 0.25F);
+			if (this.canPassengerSteer()) {
+				this.setAIMoveSpeed((float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+				super.travel(motion);
+			} else if (entitylivingbase instanceof PlayerEntity) {
+				setMotion(0, 0, 0);
+			}
+
+			this.prevLimbSwingAmount = this.limbSwingAmount;
+			double d1 = this.getPosX() - this.prevPosX;
+			double d0 = this.getPosZ() - this.prevPosZ;
+			float f2 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
+
+			if (f2 > 1.0F) f2 = 1.0F;
+			this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
+			this.limbSwing += this.limbSwingAmount;
+		} else super.travel(motion);
+	}
+
+	@Override
+	public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+		ItemStack stack = p_230254_1_.getHeldItem(p_230254_2_);
+		if (!this.hasChest() && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+			this.setChested(true);
+			this.playSound(SoundEvents.ENTITY_DONKEY_CHEST, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+			this.initChest();
+			return ActionResultType.SUCCESS;
+		}
+		if (!this.isChild() && this.isTamed() && (this.isOwner(p_230254_1_) || this.getControllingPassenger() != null)) {
+			if (p_230254_1_.isSneaking()) {
+				p_230254_1_.openContainer(this);
+				return ActionResultType.SUCCESS;
+			}
+			if (!this.inventory.getStackInSlot(0).isEmpty() && !p_230254_1_.isPassenger(this) && this.getPassengers().size() < 2) {
+				p_230254_1_.startRiding(this);
+				return ActionResultType.SUCCESS;
+			}
+		} else if (!this.isTamed() && stack.getItem() == ItemInit.RAVAGER_MILK.get()) {
+			if (!p_230254_1_.abilities.isCreativeMode) stack.shrink(1);
+			if (!p_230254_1_.abilities.isCreativeMode) p_230254_1_.addItemStackToInventory(new ItemStack(Items.BUCKET));
+			if (!this.world.isRemote) {
+				if (this.rand.nextInt(3) == 0 && !ForgeEventFactory.onAnimalTame(this, p_230254_1_)) {
+					this.setTamedBy(p_230254_1_);
+					this.isJumping = false;
+					this.navigator.clearPath();
+					this.playTameEffect(true);
+					this.world.setEntityState(this, (byte) 7);
+				} else {
+					this.playTameEffect(false);
+					this.world.setEntityState(this, (byte) 6);
+				}
+			}
+			return ActionResultType.SUCCESS;
+		}
+		return super.func_230254_b_(p_230254_1_, p_230254_2_);
+	}
+
+	protected boolean canFitPassenger(Entity passenger) {
+		return this.getPassengers().size() < 2;
+	}
+
+	@Nullable
+	public Entity getControllingPassenger() {
+		List<Entity> list = this.getPassengers();
+		return list.isEmpty() ? null : list.get(0);
+	}
+
+	@Override
+	public double getMountedYOffset() {
+		return this.getHeight() + 0.1F;
+	}
+
+	@Override
+	public boolean isBreedingItem(ItemStack stack) {
+		return stack.getItem() == ItemInit.CABBAGE.get();
 	}
 
 	protected SoundEvent getAmbientSound() {
@@ -146,9 +339,33 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		return SoundEvents.ENTITY_RAVAGER_DEATH;
 	}
 
-	/**
-	 * Returns the volume for the sounds this mob makes.
-	 */
+	public float getEyeHeight(Pose pose) {
+		return this.isChild() ? this.getHeight() : 2.0F;
+	}
+
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
+		boolean flag = this.dataManager.get(SADDLE);
+		if (!this.world.isRemote) this.dataManager.set(SADDLE, !this.inventory.getStackInSlot(0).isEmpty());
+		if (this.ticksExisted > 20 && !flag && this.dataManager.get(SADDLE))
+			this.playSound(SoundEvents.ENTITY_HORSE_SADDLE, 0.5F, 1.0F);
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+		return new RavagerContainer(p_createMenu_1_, this, p_createMenu_3_);
+	}
+
+	public static AttributeModifierMap.MutableAttribute func_234233_eS_() {
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 100.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D).createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.75D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 12.0D).createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.5D).createMutableAttribute(Attributes.FOLLOW_RANGE, 32.0D);
+	}
+
+	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+		this.setGrowingAge(-24000);
+		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+	}
+
 	protected float getSoundVolume() {
 		return 0.4F;
 	}
@@ -160,10 +377,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		return super.attackEntityAsMob(entityIn);
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
-	 */
 	public void livingTick() {
 		super.livingTick();
 		if (this.isAlive()) {
@@ -226,18 +439,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		}
 	}
 
-	public void onDeath(DamageSource cause) {
-		super.onDeath(cause);
-	}
-
-	protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
-		return sizeIn.height * 0.8F;
-	}
-
-	public int getVerticalFaceSpeed() {
-		return this.isEntitySleeping() ? 20 : super.getVerticalFaceSpeed();
-	}
-
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source)) {
 			return false;
@@ -252,18 +453,8 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		}
 	}
 
-	protected void updateHorseSlots() {
-		if (!this.world.isRemote) {
-			this.setSaddled(!this.horseChest.getStackInSlot(0).isEmpty() && this.canBeSaddled());
-		}
-	}
-
 	public boolean canEntityBeSeen(Entity entityIn) {
 		return this.stunTick <= 0 && this.roarTick <= 0 ? super.canEntityBeSeen(entityIn) : false;
-	}
-
-	public boolean canBeSaddled() {
-		return true;
 	}
 
 	protected void constructKnockBackVector(LivingEntity entityIn) {
@@ -313,100 +504,12 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 
 	}
 
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-		this.setGrowingAge(-24000);
-		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-	}
 
 	private void launch(Entity p_213688_1_) {
 		double d0 = p_213688_1_.getPosX() - this.getPosX();
 		double d1 = p_213688_1_.getPosZ() - this.getPosZ();
 		double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
 		p_213688_1_.addVelocity(d0 / d2 * 4.0D, 0.2D, d1 / d2 * 4.0D);
-	}
-
-	public void setTamed(boolean tamed) {
-		super.setTamed(tamed);
-		if (tamed) {
-			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
-			this.setHealth(20.0F);
-		} else {
-			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0D);
-		}
-
-		this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-	}
-
-	public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-		ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
-		Item item = itemstack.getItem();
-		if (this.world.isRemote) {
-			boolean flag = this.isOwner(p_230254_1_) || this.isTamed() || item == ItemInit.RAVAGER_MILK.get() && !this.isTamed() && !this.func_233678_J__();
-			return flag ? ActionResultType.CONSUME : ActionResultType.PASS;
-		}else if (item == Items.BUCKET && !this.isChild()) {
-			itemstack.shrink(1);
-			p_230254_1_.addItemStackToInventory(new ItemStack(ItemInit.RAVAGER_MILK.get()));
-			return ActionResultType.SUCCESS;
-		} else if(item == Items.SADDLE && !this.isSaddled() && this.isTamed()) {
-			this.setSaddled(true);
-			itemstack.shrink(1);
-			return ActionResultType.SUCCESS;
-		} else {
-			if (item == ItemInit.RAVAGER_MILK.get() && !this.func_233678_J__()) {
-				if (!p_230254_1_.abilities.isCreativeMode) {
-					itemstack.shrink(1);
-					p_230254_1_.addItemStackToInventory(new ItemStack(Items.BUCKET));
-				}
-
-				if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, p_230254_1_)) {
-					this.setTamedBy(p_230254_1_);
-					this.navigator.clearPath();
-					this.setAttackTarget((LivingEntity)null);
-					this.func_233687_w_(true);
-					this.world.setEntityState(this, (byte)7);
-				} 
-				else {
-					this.world.setEntityState(this, (byte)6);
-				}
-
-				return ActionResultType.SUCCESS;
-			} 
-
-			return super.func_230254_b_(p_230254_1_, p_230254_2_);
-		}
-	}
-
-	public boolean isBreedingItem(ItemStack stack) {
-		Item item = stack.getItem();
-		return item.isFood() && item.getFood().isMeat();
-	}
-
-	/**
-	 * Will return how many at most can spawn in a chunk at once.
-	 */
-	public int getMaxSpawnedInChunk() {
-		return 8;
-	}
-
-	public int getAngerTime() {
-		return this.dataManager.get(field_234232_bz_);
-	}
-
-	public void setAngerTime(int time) {
-		this.dataManager.set(field_234232_bz_, time);
-	}
-
-	public void func_230258_H__() {
-		this.setAngerTime(field_234230_bG_.getRandomWithinRange(this.rand));
-	}
-
-	@Nullable
-	public UUID getAngerTarget() {
-		return this.field_234231_bH_;
-	}
-
-	public void setAngerTarget(@Nullable UUID target) {
-		this.field_234231_bH_ = target;
 	}
 
 	public RavageAndCabbageRavagerEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
@@ -420,13 +523,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		return ravagerentity;
 	}
 
-	public void setSaddled(boolean saddled) {
-		this.setWatchableBoolean(4, saddled);
-	}
-
-	/**
-	 * Returns true if the mob is currently able to mate with the specified mob.
-	 */
 	public boolean canMateWith(AnimalEntity otherAnimal) {
 		if (otherAnimal == this) {
 			return false;
@@ -445,34 +541,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 			}
 		}
 	}
-
-	public boolean isSaddled() {
-		return this.getWatchableBoolean(4);
-	}
-
-	protected boolean getWatchableBoolean(int p_110233_1_) {
-		return (this.dataManager.get(STATUS) & p_110233_1_) != 0;
-	}
-
-	protected void setWatchableBoolean(int p_110208_1_, boolean p_110208_2_) {
-		byte b0 = this.dataManager.get(STATUS);
-		if (p_110208_2_) {
-			this.dataManager.set(STATUS, (byte)(b0 | p_110208_1_));
-		} else {
-			this.dataManager.set(STATUS, (byte)(b0 & ~p_110208_1_));
-		}
-
-	}
-
-
-	public boolean canBeLeashedTo(PlayerEntity player) {
-		return !this.func_233678_J__() && super.canBeLeashedTo(player);
-	}
-
-	protected boolean isMovementBlocked() {
-		return super.isMovementBlocked() || this.attackTick > 0 || this.stunTick > 0 || this.roarTick > 0;
-	}
-
+	
 	@OnlyIn(Dist.CLIENT)
 	public void handleStatusUpdate(byte id) {
 		if (id == 4) {
@@ -484,12 +553,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 
 		super.handleStatusUpdate(id);
 	}
-
-	@OnlyIn(Dist.CLIENT)
-	public Vector3d func_241205_ce_() {
-		return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getWidth() * 0.4F));
-	}
-
+	
 	@OnlyIn(Dist.CLIENT)
 	public int func_213683_l() {
 		return this.attackTick;
@@ -504,7 +568,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 	public int func_213687_eg() {
 		return this.roarTick;
 	}
-
+	
 	class AttackGoal extends MeleeAttackGoal {
 		public AttackGoal() {
 			super(RavageAndCabbageRavagerEntity.this, 1.0D, true);
@@ -536,65 +600,9 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IAn
 		}
 	}
 
-	public double getMountedYOffset() {
-		return 2.1D;
-	}
-
-	public PlayerEntity getRidingPlayer() {
-		if (this.getControllingPassenger() instanceof PlayerEntity) {
-			return (PlayerEntity) getControllingPassenger();
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public void updatePassenger(Entity passenger) {
-		super.updatePassenger(passenger);
-		if (this.isPassenger(passenger)) {
-			renderYawOffset = rotationYaw;
-			this.rotationYaw = passenger.rotationYaw;
-		}
-		if (this.getRidingPlayer() != null && this.getRidingPlayer() instanceof PlayerEntity && this.getAttackTarget() != this.getRidingPlayer()) {
-			rotationYaw = renderYawOffset;
-			rotationYaw = this.getRidingPlayer().rotationYaw;
-			rotationYawHead = this.getRidingPlayer().rotationYaw;
-			float radius = ridingXZ * 0.7F * -3;
-			float angle = (0.01745329251F * this.renderYawOffset);
-			double extraX = radius * MathHelper.sin((float) (Math.PI + angle));
-			double extraZ = radius * MathHelper.cos(angle);
-			double extraY = ridingY * 4;
-			this.getRidingPlayer().setPosition(this.getPosX() + extraX, this.getPosY() + extraY - 1.75F, this.getPosZ() + extraZ);
-		}
-	}
-
-	public void travel(Vector3d positionIn) {
-		if (this.isAlive()) {
-			if (this.isBeingRidden() && this.canBeSteered() && this.isSaddled()) {
-				LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
-				this.rotationYaw = livingentity.rotationYaw;
-				this.prevRotationYaw = this.rotationYaw;
-				this.rotationPitch = livingentity.rotationPitch * 0.5F;
-				this.setRotation(this.rotationYaw, this.rotationPitch);
-				this.renderYawOffset = this.rotationYaw;
-				this.rotationYawHead = this.renderYawOffset;
-				float f = livingentity.moveStrafing * 0.5F;
-				float f1 = livingentity.moveForward;
-				if (f1 <= 0.0F) {
-					f1 *= 0.25F;
-				}
-
-				if (this.canPassengerSteer()) {
-					this.setAIMoveSpeed((float)this.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
-					super.travel(new Vector3d((double)f, positionIn.y, (double)f1));
-				} else if (livingentity instanceof PlayerEntity) {
-					this.setMotion(Vector3d.ZERO);
-				}
-
-			} else {
-				super.travel(positionIn);
-			}
-		}
+	@OnlyIn(Dist.CLIENT)
+	public Vector3d func_241205_ce_() {
+		return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getWidth() * 0.4F));
 	}
 
 }

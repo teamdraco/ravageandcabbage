@@ -14,6 +14,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import superlord.ravagecabbage.entity.CabbagerEntity;
 import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
 import superlord.ravagecabbage.init.BlockInit;
+import superlord.ravagecabbage.init.ContainerInit;
 import superlord.ravagecabbage.init.EntityInit;
 import superlord.ravagecabbage.init.ItemInit;
 
@@ -29,6 +30,7 @@ public class RavageAndCabbage {
         EntityInit.REGISTER.register(bus);
         ItemInit.REGISTER.register(bus);
         BlockInit.REGISTER.register(bus);
+        ContainerInit.REGISTER.register(bus);
         bus.addListener(this::doClientStuff);
 
     }
