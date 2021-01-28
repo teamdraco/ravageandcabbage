@@ -65,6 +65,7 @@ import net.minecraft.util.TransportationHelper;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
@@ -647,5 +648,10 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 	public void handleStopJump() {
 
 	}
+	
+	@Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return new ItemStack(ItemInit.RAVAGER_SPAWN_EGG.get());
+    }
 
 }

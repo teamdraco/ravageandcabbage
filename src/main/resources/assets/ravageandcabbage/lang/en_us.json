@@ -4,8 +4,8 @@
 	"item.ravageandcabbage.cabbage": "Cabbage",
 	"item.ravageandcabbage.cabbage_seeds": "Cabbage Seeds",
 	"item.ravageandcabbage.ravager_milk": "Ravager Milk Bucket",
-	"item.ravageandcabbage.cabbager_spawn_egg": "Spawn Cabbager",
-	"item.ravageandcabbage.ravager_spawn_egg": "Spawn Ravager",
+	"item.ravageandcabbage.cabbager_spawn_egg": "Cabbager Spawn Egg",
+	"item.ravageandcabbage.ravager_spawn_egg": "Ravager Spawn Egg",
 	
 	"entity.ravageandcabbage.ravager": "Ravager",
 	"entity.ravageandcabbage.cabbager": "Cabbager",
