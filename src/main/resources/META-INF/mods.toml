@@ -5,10 +5,10 @@ license="All rights reserved"
 modId="ravageandcabbage" #mandatory
 version="1.0.0" #mandatory
 displayName="Ravage & Cabbage" #mandatory
-credits="Coda (Assets), Larry (Building and Idea), & superlord9362 (Code)" #optional
+credits="Coda (Assets), Ninni (Assets), Larry (Building and Idea), & superlord9362 (Code)" #optional
 authors="superlord9362" #optional
-description='''Temporary description'''
-[[dependencies.examplemod]]
+description='''A fun mod adding cabbages and expanding ravagers!'''
+[[dependencies.ravageandcabbage]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.16.4,1.17)"
