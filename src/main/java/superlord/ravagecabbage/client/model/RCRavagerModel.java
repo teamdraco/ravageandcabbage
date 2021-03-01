@@ -23,8 +23,6 @@ public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity
    public RCRavagerModel() {
       this.textureWidth = 128;
       this.textureHeight = 128;
-      int i = 16;
-      float f = 0.0F;
       this.neck = new ModelRenderer(this);
       this.neck.setRotationPoint(0.0F, -7.0F, -1.5F);
       this.neck.setTextureOffset(68, 73).addBox(-5.0F, -1.0F, -18.0F, 10.0F, 10.0F, 18.0F, 0.0F);
@@ -91,9 +89,7 @@ public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity
       super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
       int i = entityIn.func_213684_dX();
       int j = entityIn.func_213687_eg();
-      int k = 20;
       int l = entityIn.func_213683_l();
-      int i1 = 10;
       if (l > 0) {
          float f = MathHelper.func_233021_e_((float)l - partialTick, 10.0F);
          float f1 = (1.0F + f) * 0.5F;
@@ -109,7 +105,6 @@ public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity
             this.jaw.rotateAngleX = 0.15707964F * MathHelper.sin((float)Math.PI * ((float)l - partialTick) / 10.0F);
          }
       } else {
-         float f5 = -1.0F;
          float f6 = -1.0F * MathHelper.sin(this.neck.rotateAngleX);
          this.neck.rotationPointX = 0.0F;
          this.neck.rotationPointY = -7.0F - f6;

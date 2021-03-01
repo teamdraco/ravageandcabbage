@@ -22,6 +22,7 @@ import net.minecraft.entity.Pose;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -109,6 +110,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 			this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 			this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
 		}
+		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
 	}
 
 	public static AttributeModifierMap.MutableAttribute func_234215_eI_() {
@@ -268,8 +270,8 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 	@Override
 	public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
 		boolean flag = this.isBreedingItem(p_230254_1_.getHeldItem(p_230254_2_));
+		int i = this.getGrowingAge();
 		ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
-
 		if (!flag && this.isHorseSaddled() && !this.isBeingRidden() && !p_230254_1_.isSecondaryUseActive() && itemstack.getItem() != Items.BUCKET && this.isTamed()) {
 			if (!this.world.isRemote) {
 				p_230254_1_.startRiding(this);
@@ -286,23 +288,31 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 				p_230254_1_.setHeldItem(p_230254_2_, itemstack1);
 				return ActionResultType.func_233537_a_(this.world.isRemote);
 			}  else if (itemstack.getItem() == ItemInit.RAVAGER_MILK.get() && !this.isTamed()) {
-	            if (!p_230254_1_.abilities.isCreativeMode) {
-	                itemstack.shrink(1);
+				if (!p_230254_1_.abilities.isCreativeMode) {
+					itemstack.shrink(1);
 					p_230254_1_.setHeldItem(p_230254_2_, Items.BUCKET.getDefaultInstance());
-	             }
+				}
+				if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, p_230254_1_)) {
+					this.setTamedBy(p_230254_1_);
+					this.navigator.clearPath();
+					this.setAttackTarget((LivingEntity)null);
+					this.func_233687_w_(true);
+					this.world.setEntityState(this, (byte)7);
+				} else if(flag && this.canFallInLove() && i == 0 && this.rand.nextInt(15) == 0) {
+					this.consumeItemFromStack(p_230254_1_, itemstack);
+					this.setInLove(p_230254_1_);
+					return ActionResultType.SUCCESS;
+				} else if (flag && this.isChild()) {
+					this.consumeItemFromStack(p_230254_1_, itemstack);
+					this.ageUp((int)((float)(-i / 20) * 0.1F), true);
+					return ActionResultType.func_233537_a_(this.world.isRemote);
+				}
+				else {
+					this.world.setEntityState(this, (byte)6);
+				}
 
-	             if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, p_230254_1_)) {
-	                this.setTamedBy(p_230254_1_);
-	                this.navigator.clearPath();
-	                this.setAttackTarget((LivingEntity)null);
-	                this.func_233687_w_(true);
-	                this.world.setEntityState(this, (byte)7);
-	             } else {
-	                this.world.setEntityState(this, (byte)6);
-	             }
-
-	             return ActionResultType.SUCCESS;
-	          } else {
+				return ActionResultType.SUCCESS;
+			} else {
 				return actionresulttype;
 			}
 		}
@@ -648,10 +658,10 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 	public void handleStopJump() {
 
 	}
-	
+
 	@Override
-    public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(ItemInit.RAVAGER_SPAWN_EGG.get());
-    }
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(ItemInit.RAVAGER_SPAWN_EGG.get());
+	}
 
 }
