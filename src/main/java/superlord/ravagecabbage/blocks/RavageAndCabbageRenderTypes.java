@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import superlord.ravagecabbage.RavageAndCabbage;
-import superlord.ravagecabbage.init.BlockInit;
+import superlord.ravagecabbage.init.RCBlocks;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Bus.MOD)
 public class RavageAndCabbageRenderTypes {
@@ -20,7 +20,7 @@ public class RavageAndCabbageRenderTypes {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			RenderType cutoutRenderType = RenderType.getCutout();
 			
-			RenderTypeLookup.setRenderLayer(BlockInit.CABBAGE_CROP.get(), cutoutRenderType);
+			RenderTypeLookup.setRenderLayer(RCBlocks.CABBAGE_CROP.get(), cutoutRenderType);
 		}
 	}
 

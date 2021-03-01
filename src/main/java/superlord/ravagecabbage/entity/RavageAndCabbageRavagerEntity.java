@@ -76,8 +76,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.ravagecabbage.init.EntityInit;
-import superlord.ravagecabbage.init.ItemInit;
+import superlord.ravagecabbage.init.RCEntities;
+import superlord.ravagecabbage.init.RCItems;
 
 public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJumpingMount, IEquipable  {
 	private static final Predicate<Entity> field_213690_b = (p_213685_0_) -> {
@@ -284,10 +284,10 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 				return ActionResultType.PASS;
 			} else if(itemstack.getItem() == Items.BUCKET && !this.isChild()) {
 				p_230254_1_.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
-				ItemStack itemstack1 = DrinkHelper.fill(itemstack, p_230254_1_, ItemInit.RAVAGER_MILK.get().getDefaultInstance());
+				ItemStack itemstack1 = DrinkHelper.fill(itemstack, p_230254_1_, RCItems.RAVAGER_MILK.get().getDefaultInstance());
 				p_230254_1_.setHeldItem(p_230254_2_, itemstack1);
 				return ActionResultType.func_233537_a_(this.world.isRemote);
-			}  else if (itemstack.getItem() == ItemInit.RAVAGER_MILK.get() && !this.isTamed()) {
+			}  else if (itemstack.getItem() == RCItems.RAVAGER_MILK.get() && !this.isTamed()) {
 				if (!p_230254_1_.abilities.isCreativeMode) {
 					itemstack.shrink(1);
 					p_230254_1_.setHeldItem(p_230254_2_, Items.BUCKET.getDefaultInstance());
@@ -335,7 +335,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
-		return stack.getItem() == ItemInit.CABBAGE.get();
+		return stack.getItem() == RCItems.CABBAGE.get();
 	}
 
 	protected SoundEvent getAmbientSound() {
@@ -510,7 +510,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 	}
 
 	public RavageAndCabbageRavagerEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-		RavageAndCabbageRavagerEntity ravagerentity = EntityInit.RAVAGER.get().create(p_241840_1_);
+		RavageAndCabbageRavagerEntity ravagerentity = RCEntities.RAVAGER.get().create(p_241840_1_);
 		UUID uuid = this.getOwnerId();
 		if (uuid != null) {
 			ravagerentity.setOwnerId(uuid);
@@ -661,7 +661,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
-		return new ItemStack(ItemInit.RAVAGER_SPAWN_EGG.get());
+		return new ItemStack(RCItems.RAVAGER_SPAWN_EGG.get());
 	}
 
 }

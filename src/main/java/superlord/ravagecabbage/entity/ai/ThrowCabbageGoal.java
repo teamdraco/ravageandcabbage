@@ -7,7 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import superlord.ravagecabbage.init.ItemInit;
+import superlord.ravagecabbage.init.RCItems;
 import superlord.ravagecabbage.items.ThrowableCabbageItem;
 
 public class ThrowCabbageGoal<T extends MonsterEntity & IRangedAttackMob> extends Goal {
@@ -135,7 +135,7 @@ public class ThrowCabbageGoal<T extends MonsterEntity & IRangedAttackMob> extend
                }
             }
          } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
-            this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, ItemInit.CABBAGE_THROWABLE.get()));
+            this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, RCItems.CABBAGE_THROWABLE.get()));
          }
 
       }

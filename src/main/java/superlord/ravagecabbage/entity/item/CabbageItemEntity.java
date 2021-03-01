@@ -13,8 +13,8 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import superlord.ravagecabbage.init.EntityInit;
-import superlord.ravagecabbage.init.ItemInit;
+import superlord.ravagecabbage.init.RCEntities;
+import superlord.ravagecabbage.init.RCItems;
 
 public class CabbageItemEntity extends ProjectileItemEntity {
    public CabbageItemEntity(EntityType<? extends CabbageItemEntity> p_i50159_1_, World p_i50159_2_) {
@@ -22,15 +22,15 @@ public class CabbageItemEntity extends ProjectileItemEntity {
    }
 
    public CabbageItemEntity(World worldIn, LivingEntity throwerIn) {
-      super(EntityInit.CABBAGE.get(), throwerIn, worldIn);
+      super(RCEntities.CABBAGE.get(), throwerIn, worldIn);
    }
 
    public CabbageItemEntity(World worldIn, double x, double y, double z) {
-      super(EntityInit.CABBAGE.get(), x, y, z, worldIn);
+      super(RCEntities.CABBAGE.get(), x, y, z, worldIn);
    }
 
    protected Item getDefaultItem() {
-      return ItemInit.CABBAGE_THROWABLE.get();
+      return RCItems.CABBAGE_THROWABLE.get();
    }
 
    @Nonnull

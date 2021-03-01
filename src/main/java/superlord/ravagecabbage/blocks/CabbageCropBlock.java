@@ -23,7 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import superlord.ravagecabbage.init.ItemInit;
+import superlord.ravagecabbage.init.RCItems;
 
 public class CabbageCropBlock extends BushBlock implements IGrowable {
    public static final IntegerProperty AGE = BlockStateProperties.AGE_0_5;
@@ -157,7 +157,7 @@ public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Ent
    }
 
    protected IItemProvider getSeedsItem() {
-      return ItemInit.CABBAGE_SEEDS.get();
+      return RCItems.CABBAGE_SEEDS.get();
    }
 
    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {

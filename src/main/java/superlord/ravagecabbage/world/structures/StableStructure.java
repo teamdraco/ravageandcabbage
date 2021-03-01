@@ -1,10 +1,14 @@
 package superlord.ravagecabbage.world.structures;
 
+import java.util.List;
 import java.util.Random;
 
 import com.mojang.serialization.Codec;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -12,17 +16,20 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.ISeedReader;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureManager;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.structure.*;
+import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import superlord.ravagecabbage.RavageAndCabbage;
+import superlord.ravagecabbage.init.RCStructures;
 
 public class StableStructure extends Structure<NoFeatureConfig> {
 
@@ -51,60 +58,83 @@ public class StableStructure extends Structure<NoFeatureConfig> {
         return true;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public Structure.IStartFactory getStartFactory() {
-        return StableStructure.Start::new;
-    }
-
     @Override
     public GenerationStage.Decoration getDecorationStage() {
         return GenerationStage.Decoration.SURFACE_STRUCTURES;
     }
 
-    public static class Start extends StructureStart<NoFeatureConfig> {
-        public Start(Structure<NoFeatureConfig> p_i225806_1_, int p_i225806_2_, int p_i225806_3_, MutableBoundingBox p_i225806_4_, int p_i225806_5_, long p_i225806_6_) {
-            super(p_i225806_1_, p_i225806_2_, p_i225806_3_, p_i225806_4_, p_i225806_5_, p_i225806_6_);
+    @Override
+    public IStartFactory<NoFeatureConfig> getStartFactory() {
+        return StableStructure.Start::new;
+    }
+
+    public static class Start extends StructureStart<NoFeatureConfig>  {
+        public Start(Structure<NoFeatureConfig> structureIn, int chunkX, int chunkZ, MutableBoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
+            super(structureIn, chunkX, chunkZ, mutableBoundingBox, referenceIn, seedIn);
         }
 
         @Override
-        public void func_230364_a_(DynamicRegistries p_230364_1_, ChunkGenerator p_230364_2_, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biome, NoFeatureConfig p_230364_7_) {
-            BlockPos blockpos = new BlockPos(chunkX * 16, 90, chunkZ * 16);
-
+        public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
             Rotation rotation = Rotation.values()[this.rand.nextInt(Rotation.values().length)];
-            StablePieces.addStructure(templateManagerIn, blockpos, rotation, this.components, this.rand, biome);
+            int x = (chunkX << 4) + 7;
+            int z = (chunkZ << 4) + 7;
+            int surfaceY = Math.max(generator.getNoiseHeightMinusOne(x + 12, z + 12, Heightmap.Type.WORLD_SURFACE_WG), generator.getGroundHeight());
+            BlockPos blockpos = new BlockPos(x, surfaceY, z);
+            Piece.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
             this.recalculateStructureSize();
         }
+    }
 
-        public void func_230366_a_(ISeedReader p_230366_1_, StructureManager p_230366_2_, ChunkGenerator p_230366_3_, Random p_230366_4_, MutableBoundingBox p_230366_5_, ChunkPos p_230366_6_) {
-            super.func_230366_a_(p_230366_1_, p_230366_2_, p_230366_3_, p_230366_4_, p_230366_5_, p_230366_6_);
-            int i = this.bounds.minY;
+    public static class Piece extends TemplateStructurePiece {
+        private ResourceLocation resourceLocation;
+        private Rotation rotation;
 
-            for (int j = p_230366_5_.minX; j <= p_230366_5_.maxX; ++j) {
-                for (int k = p_230366_5_.minZ; k <= p_230366_5_.maxZ; ++k) {
-                    BlockPos blockpos = new BlockPos(j, i, k);
-                    if (!p_230366_1_.isAirBlock(blockpos) && this.bounds.isVecInside(blockpos)) {
-                        boolean flag = false;
+        public Piece(TemplateManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
+            super(RCStructures.STABLE_PIECE_TYPE, 0);
+            this.resourceLocation = resourceLocationIn;
+            this.templatePosition = pos;
+            this.rotation = rotationIn;
+            this.setupPiece(templateManagerIn);
+        }
 
-                        for (StructurePiece structurepiece : this.components) {
-                            if (structurepiece.getBoundingBox().isVecInside(blockpos)) {
-                                flag = true;
-                                break;
-                            }
-                        }
+        public Piece(TemplateManager templateManagerIn, CompoundNBT tagCompound) {
+            super(RCStructures.STABLE_PIECE_TYPE, tagCompound);
+            this.resourceLocation = new ResourceLocation(tagCompound.getString("Template"));
+            this.rotation = Rotation.valueOf(tagCompound.getString("Rot"));
+            this.setupPiece(templateManagerIn);
+        }
 
-                        if (flag) {
-                            for (int l = i - 1; l > 1; --l) {
-                                BlockPos blockpos1 = new BlockPos(j, l, k);
-                                if (!p_230366_1_.isAirBlock(blockpos1) && !p_230366_1_.getBlockState(blockpos1).getMaterial().isLiquid()) {
-                                    break;
-                                }
+        public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
+            int x = pos.getX();
+            int z = pos.getZ();
+            BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
+            BlockPos blockpos = rotationOffSet.add(x, pos.getY(), z);
+            pieceList.add(new Piece(templateManager, new ResourceLocation(RavageAndCabbage.MOD_ID, "stable"), blockpos, rotation));
+        }
 
-                                p_230366_1_.setBlockState(blockpos1, Blocks.DIRT.getDefaultState(), 2);
-                            }
-                        }
-                    }
-                }
-            }
+        private void setupPiece(TemplateManager templateManager) {
+            Template template = templateManager.getTemplateDefaulted(this.resourceLocation);
+            PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
+            this.setup(template, this.templatePosition, placementsettings);
+        }
+
+        @Override
+        protected void readAdditional(CompoundNBT tagCompound) {
+            super.readAdditional(tagCompound);
+            tagCompound.putString("Template", this.resourceLocation.toString());
+            tagCompound.putString("Rot", this.rotation.name());
+        }
+
+        @Override
+        public boolean func_230383_a_(ISeedReader seedReader, StructureManager structureManager, ChunkGenerator chunkGenerator, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos pos) {
+            PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK);
+            BlockPos blockpos = BlockPos.ZERO;
+            this.templatePosition.add(Template.transformedBlockPos(placementsettings, new BlockPos(-blockpos.getX(), 0, -blockpos.getZ())));
+            return super.func_230383_a_(seedReader, structureManager, chunkGenerator, randomIn, structureBoundingBoxIn, chunkPos, pos);
+        }
+
+        @Override
+        protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
 
         }
     }

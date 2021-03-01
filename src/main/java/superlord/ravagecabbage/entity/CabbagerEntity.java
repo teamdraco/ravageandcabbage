@@ -41,7 +41,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.ravagecabbage.entity.item.CabbageItemEntity;
-import superlord.ravagecabbage.init.ItemInit;
+import superlord.ravagecabbage.init.RCItems;
 
 public class CabbagerEntity extends AbstractIllagerEntity implements IRangedAttackMob {
 	private final Inventory inventory = new Inventory(5);
@@ -174,6 +174,6 @@ public class CabbagerEntity extends AbstractIllagerEntity implements IRangedAtta
 	
 	@Override
     public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(ItemInit.CABBAGER_SPAWN_EGG.get());
+        return new ItemStack(RCItems.CABBAGER_SPAWN_EGG.get());
     }
 }

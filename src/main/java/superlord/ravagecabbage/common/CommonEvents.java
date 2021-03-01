@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.entity.CabbagerEntity;
-import superlord.ravagecabbage.init.ItemInit;
+import superlord.ravagecabbage.init.RCItems;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
@@ -33,9 +33,9 @@ public class CommonEvents {
                     itemstack.shrink(1);
                 }
                 if (itemstack.isEmpty()) {
-                    event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ItemInit.RAVAGER_MILK.get()));
-                } else if (!event.getPlayer().inventory.addItemStackToInventory(new ItemStack(ItemInit.RAVAGER_MILK.get()))) {
-                    event.getPlayer().dropItem(new ItemStack(ItemInit.RAVAGER_MILK.get()), false);
+                    event.getPlayer().setHeldItem(event.getHand(), new ItemStack(RCItems.RAVAGER_MILK.get()));
+                } else if (!event.getPlayer().inventory.addItemStackToInventory(new ItemStack(RCItems.RAVAGER_MILK.get()))) {
+                    event.getPlayer().dropItem(new ItemStack(RCItems.RAVAGER_MILK.get()), false);
                 }
                 event.setCanceled(true);
             }

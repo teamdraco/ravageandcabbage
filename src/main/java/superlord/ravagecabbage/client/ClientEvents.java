@@ -13,7 +13,7 @@ import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.client.render.CabbageRenderer;
 import superlord.ravagecabbage.client.render.CabbagerRenderer;
 import superlord.ravagecabbage.client.render.RavagerRenderer;
-import superlord.ravagecabbage.init.EntityInit;
+import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.items.RavageAndCabbageSpawnEggItem;
 
 @OnlyIn(Dist.CLIENT)
@@ -22,9 +22,9 @@ public class ClientEvents {
 	
 	@SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(EntityInit.CABBAGE.get(), CabbageRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityInit.CABBAGER.get(), CabbagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityInit.RAVAGER.get(), manager -> new RavagerRenderer()); 
+		RenderingRegistry.registerEntityRenderingHandler(RCEntities.CABBAGE.get(), CabbageRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(RCEntities.CABBAGER.get(), CabbagerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(RCEntities.RAVAGER.get(), manager -> new RavagerRenderer());
 	}
 	
 	@SubscribeEvent

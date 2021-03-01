@@ -11,7 +11,7 @@ import superlord.ravagecabbage.entity.CabbagerEntity;
 import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
 import superlord.ravagecabbage.entity.item.CabbageItemEntity;
 
-public class EntityInit {
+public class RCEntities {
 	
     public static final DeferredRegister<EntityType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.ENTITIES, RavageAndCabbage.MOD_ID);
 
