@@ -23,7 +23,7 @@ public class RCStructures {
 	public static final RegistryObject<Structure<NoFeatureConfig>> STABLE = REGISTER.register("stable", () -> (new StableStructure(NoFeatureConfig.field_236558_a_)));
 
 	public static void setupStructures() {
-		setupMapSpacingAndLand(STABLE.get(), new StructureSeparationSettings(10, 1, 2538959), true);
+		setupMapSpacingAndLand(STABLE.get(), new StructureSeparationSettings(100, 50, 2538959), true);
 	}
 
 	public static <F extends Structure<?>> void setupMapSpacingAndLand(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {

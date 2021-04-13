@@ -37,7 +37,6 @@ import superlord.ravagecabbage.init.*;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 @Mod(RavageAndCabbage.MOD_ID)
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID)

@@ -6,7 +6,14 @@ import java.util.Random;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.monster.RavagerEntity;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.BarrelTileEntity;
+import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -29,6 +36,9 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import superlord.ravagecabbage.RavageAndCabbage;
+import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
+import superlord.ravagecabbage.init.RCEntities;
+import superlord.ravagecabbage.init.RCLootTables;
 import superlord.ravagecabbage.init.RCStructures;
 
 public class StableStructure extends Structure<NoFeatureConfig> {
@@ -78,7 +88,7 @@ public class StableStructure extends Structure<NoFeatureConfig> {
             Rotation rotation = Rotation.values()[this.rand.nextInt(Rotation.values().length)];
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
-            int surfaceY = Math.max(generator.getNoiseHeightMinusOne(x + 12, z + 12, Heightmap.Type.WORLD_SURFACE_WG), generator.getGroundHeight());
+            int surfaceY = Math.max(generator.getNoiseHeightMinusOne(x + 12, z + 12, Heightmap.Type.WORLD_SURFACE_WG) - 1, generator.getGroundHeight() - 1);
             BlockPos blockpos = new BlockPos(x, surfaceY, z);
             Piece.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
             this.recalculateStructureSize();
@@ -135,7 +145,39 @@ public class StableStructure extends Structure<NoFeatureConfig> {
 
         @Override
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
-
+            if ("baby".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                RavageAndCabbageRavagerEntity entity = RCEntities.RAVAGER.get().create(worldIn.getWorld());
+                if (entity != null) {
+                    entity.setGrowingAge(-24000);
+                    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                    entity.onInitialSpawn(worldIn, worldIn.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, null, null);
+                    worldIn.addEntity(entity);
+                }
+            }
+            if ("adult".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                RavagerEntity entity = EntityType.RAVAGER.create(worldIn.getWorld());
+                if (entity != null) {
+                    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                    entity.onInitialSpawn(worldIn, worldIn.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, null, null);
+                    worldIn.addEntity(entity);
+                }
+            }
+            if ("barrel".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                TileEntity tileentity = worldIn.getTileEntity(pos.down());
+                if (tileentity instanceof BarrelTileEntity) {
+                    ((BarrelTileEntity) tileentity).setLootTable(RCLootTables.STABLE_LOOT_TABLE, rand.nextLong());
+                }
+            }
+            if ("chest".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                TileEntity tileentity = worldIn.getTileEntity(pos.down());
+                if (tileentity instanceof ChestTileEntity) {
+                    ((ChestTileEntity) tileentity).setLootTable(LootTables.CHESTS_PILLAGER_OUTPOST, rand.nextLong());
+                }
+            }
         }
     }
 }
