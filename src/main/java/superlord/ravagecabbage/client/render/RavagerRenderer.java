@@ -19,7 +19,7 @@ public class RavagerRenderer extends MobRenderer<RavageAndCabbageRavagerEntity, 
     private static final ResourceLocation BABY_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_baby.png");
 
     public RavagerRenderer() {
-        super(Minecraft.getInstance().getRenderManager(), RAVAGER_MODEL, 2F);
+        super(Minecraft.getInstance().getRenderManager(), RAVAGER_MODEL, 1.1F);
     }
 
 	public void render(RavageAndCabbageRavagerEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
