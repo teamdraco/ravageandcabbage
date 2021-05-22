@@ -73,12 +73,12 @@ public class RavageAndCabbage {
             WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
                 Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
 
-                if( structureMap instanceof ImmutableMap){
+                if (structureMap instanceof ImmutableMap){
                     Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
                     tempMap.put(RCStructures.STABLE.get(), DimensionStructuresSettings.field_236191_b_.get(RCStructures.STABLE.get()));
                     settings.getValue().getStructures().field_236193_d_ = tempMap;
                 }
-                else{
+                else {
                     structureMap.put(RCStructures.STABLE.get(), DimensionStructuresSettings.field_236191_b_.get(RCStructures.STABLE.get()));
                 }
             });
