@@ -9,17 +9,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.BoostHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IEquipable;
-import net.minecraft.entity.IJumpingMount;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.BreedGoal;
@@ -226,7 +216,12 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 
 	@OnlyIn(Dist.CLIENT)
 	public Vector3d func_241205_ce_() {
-		return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getWidth() * 0.4F));
+		return new Vector3d(0.0D, (0.6F * this.getEyeHeight()), (this.getWidth() * 0.4F));
+	}
+
+	@Override
+	protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
+		return isChild() ? 0.7F : 1.3F;
 	}
 
 	public void writeAdditional(CompoundNBT compound) {
