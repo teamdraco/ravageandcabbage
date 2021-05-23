@@ -32,7 +32,7 @@ public class RavagerMilkItem extends Item {
       if (!worldIn.isRemote) entityLiving.removePotionEffect(Effects.UNLUCK);
       if (!worldIn.isRemote) entityLiving.removePotionEffect(Effects.WEAKNESS);
       if (!worldIn.isRemote) entityLiving.removePotionEffect(Effects.WITHER);
-      if (!worldIn.isRemote) entityLiving.addPotionEffect(new EffectInstance(Effects.STRENGTH, 0, 600));
+      if (!worldIn.isRemote) entityLiving.addPotionEffect(new EffectInstance(Effects.STRENGTH, 600, 0));
 
       if (entityLiving instanceof ServerPlayerEntity) {
          ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)entityLiving;
