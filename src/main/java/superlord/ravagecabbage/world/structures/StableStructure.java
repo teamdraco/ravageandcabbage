@@ -36,6 +36,7 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import superlord.ravagecabbage.RavageAndCabbage;
+import superlord.ravagecabbage.entity.CabbagerEntity;
 import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.init.RCLootTables;
@@ -158,6 +159,24 @@ public class StableStructure extends Structure<NoFeatureConfig> {
             if ("adult".equals(function)) {
                 worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
                 RavagerEntity entity = EntityType.RAVAGER.create(worldIn.getWorld());
+                if (entity != null) {
+                    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                    entity.onInitialSpawn(worldIn, worldIn.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, null, null);
+                    worldIn.addEntity(entity);
+                }
+            }
+            if ("cabbager1".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                CabbagerEntity entity = RCEntities.CABBAGER.get().create(worldIn.getWorld());
+                if (entity != null) {
+                    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                    entity.onInitialSpawn(worldIn, worldIn.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, null, null);
+                    worldIn.addEntity(entity);
+                }
+            }
+            if ("cabbager2".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                CabbagerEntity entity = RCEntities.CABBAGER.get().create(worldIn.getWorld());
                 if (entity != null) {
                     entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
                     entity.onInitialSpawn(worldIn, worldIn.getDifficultyForLocation(pos), SpawnReason.STRUCTURE, null, null);

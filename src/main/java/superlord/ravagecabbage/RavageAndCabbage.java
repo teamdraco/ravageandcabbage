@@ -113,7 +113,8 @@ public class RavageAndCabbage {
     }
 
     private static Method GETCODEC_METHOD;
-    public void addDimensionalSpacing(final WorldEvent.Load event) {
+    @SuppressWarnings({ "unchecked", "resource" })
+	public void addDimensionalSpacing(final WorldEvent.Load event) {
         if(event.getWorld() instanceof ServerWorld){
             ServerWorld serverWorld = (ServerWorld)event.getWorld();
 

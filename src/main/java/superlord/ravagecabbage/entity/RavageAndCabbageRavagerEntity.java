@@ -21,17 +21,15 @@ import net.minecraft.entity.ai.goal.OwnerHurtByTargetGoal;
 import net.minecraft.entity.ai.goal.OwnerHurtTargetGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.monster.ZombifiedPiglinEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -58,7 +56,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IServerWorld;
@@ -69,17 +66,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.init.RCItems;
 
-public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJumpingMount, IEquipable  {
+public class RavageAndCabbageRavagerEntity extends TameableEntity {
 	private static final Predicate<Entity> field_213690_b = (p_213685_0_) -> {
 		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RavageAndCabbageRavagerEntity);
 	};
 	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.VARINT);
-	private final BoostHelper field_234214_bx_ = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
 	private int attackTick;
 	private int stunTick;
 	private int roarTick;
-	protected int gallopTime;
 
 	public RavageAndCabbageRavagerEntity(EntityType<? extends RavageAndCabbageRavagerEntity> p_i50250_1_, World p_i50250_2_) {
 		super(p_i50250_1_, p_i50250_2_);
@@ -96,9 +90,9 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
 		if (!this.isChild() && !this.isTamed()) {
 			this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
-			this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-			this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
-			this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+			this.targetSelector.addGoal(3, new UntamedAttackGoal<PlayerEntity>(this, PlayerEntity.class, true));
+			this.targetSelector.addGoal(4, new UntamedAttackGoal<AbstractVillagerEntity>(this, AbstractVillagerEntity.class, true));
+			this.targetSelector.addGoal(4, new UntamedAttackGoal<IronGolemEntity>(this, IronGolemEntity.class, true));
 		}
 		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
 	}
@@ -107,34 +101,25 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D);
 	}
 
-	public void notifyDataManagerChange(DataParameter<?> key) {
-		if (BOOST_TIME.equals(key) && this.world.isRemote) {
-			this.field_234214_bx_.updateData();
-		}
+	public boolean isSaddled() {
+		return this.dataManager.get(SADDLED);
+	}
 
-		super.notifyDataManagerChange(key);
+	private void setSaddled(boolean isSaddled) {
+		this.dataManager.set(SADDLED, isSaddled);
 	}
 
 	protected void registerData() {
 		super.registerData();
 		this.dataManager.register(SADDLED, false);
-		this.dataManager.register(BOOST_TIME, 0);
 	}
 
-	public boolean func_230264_L__() {
-		return this.isAlive() && !this.isChild();
-	}
 
 	protected void dropInventory() {
 		super.dropInventory();
-		if (this.isHorseSaddled()) {
+		if (this.isSaddled()) {
 			this.entityDropItem(Items.SADDLE);
 		}
-
-	}
-
-	public boolean isHorseSaddled() {
-		return this.field_234214_bx_.getSaddled();
 	}
 
 	public Vector3d func_230268_c_(LivingEntity livingEntity) {
@@ -185,27 +170,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 		return null;
 	}
 
-	public void func_241841_a(ServerWorld p_241841_1_, LightningBoltEntity p_241841_2_) {
-		if (p_241841_1_.getDifficulty() != Difficulty.PEACEFUL) {
-			ZombifiedPiglinEntity zombifiedpiglinentity = EntityType.ZOMBIFIED_PIGLIN.create(p_241841_1_);
-			zombifiedpiglinentity.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
-			zombifiedpiglinentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-			zombifiedpiglinentity.setNoAI(this.isAIDisabled());
-			zombifiedpiglinentity.setChild(this.isChild());
-			if (this.hasCustomName()) {
-				zombifiedpiglinentity.setCustomName(this.getCustomName());
-				zombifiedpiglinentity.setCustomNameVisible(this.isCustomNameVisible());
-			}
-
-			zombifiedpiglinentity.enablePersistence();
-			p_241841_1_.addEntity(zombifiedpiglinentity);
-			this.remove();
-		} else {
-			super.func_241841_a(p_241841_1_, p_241841_2_);
-		}
-
-	}
-
 	public float getMountedSpeed() {
 		return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.225F;
 	}
@@ -226,21 +190,19 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
-		compound.putInt("Age", this.getGrowingAge());
 		compound.putInt("AttackTick", this.attackTick);
 		compound.putInt("StunTick", this.stunTick);
 		compound.putInt("RoarTick", this.roarTick);
-		this.field_234214_bx_.setSaddledToNBT(compound);
+		compound.putBoolean("IsSaddled", this.isSaddled());
 
 	}
 
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
-		this.setGrowingAge(compound.getInt("Age"));
 		this.attackTick = compound.getInt("AttackTick");
 		this.stunTick = compound.getInt("StunTick");
 		this.roarTick = compound.getInt("RoarTick");
-		this.field_234214_bx_.setSaddledFromNBT(compound);
+		this.setSaddled(compound.getBoolean("IsSaddled"));
 	}	   
 
 	@Override
@@ -259,57 +221,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 			else f = -0.6F;
 			Vector3d vec3d = (new Vector3d(f, 0.0D, 0.0D)).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
 			passenger.setPosition(this.getPosX() + vec3d.x, this.getPosY() + this.getMountedYOffset() + passenger.getYOffset(), this.getPosZ() + vec3d.z);
-		}
-	}
-
-	@Override
-	public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-		boolean flag = this.isBreedingItem(p_230254_1_.getHeldItem(p_230254_2_));
-		int i = this.getGrowingAge();
-		ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
-		if (!flag && this.isHorseSaddled() && !this.isBeingRidden() && !p_230254_1_.isSecondaryUseActive() && itemstack.getItem() != Items.BUCKET && this.isTamed()) {
-			if (!this.world.isRemote) {
-				p_230254_1_.startRiding(this);
-			}
-
-			return ActionResultType.func_233537_a_(this.world.isRemote);
-		} else {
-			ActionResultType actionresulttype = super.func_230254_b_(p_230254_1_, p_230254_2_);
-			if (!actionresulttype.isSuccessOrConsume() && itemstack.getItem() == Items.SADDLE && this.isTamed()) {
-				return ActionResultType.PASS;
-			} else if(itemstack.getItem() == Items.BUCKET && !this.isChild()) {
-				p_230254_1_.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
-				ItemStack itemstack1 = DrinkHelper.fill(itemstack, p_230254_1_, RCItems.RAVAGER_MILK.get().getDefaultInstance());
-				p_230254_1_.setHeldItem(p_230254_2_, itemstack1);
-				return ActionResultType.func_233537_a_(this.world.isRemote);
-			}  else if (itemstack.getItem() == RCItems.RAVAGER_MILK.get() && !this.isTamed()) {
-				if (!p_230254_1_.abilities.isCreativeMode) {
-					itemstack.shrink(1);
-					p_230254_1_.setHeldItem(p_230254_2_, Items.BUCKET.getDefaultInstance());
-				}
-				if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, p_230254_1_)) {
-					this.setTamedBy(p_230254_1_);
-					this.navigator.clearPath();
-					this.setAttackTarget((LivingEntity)null);
-					this.func_233687_w_(true);
-					this.world.setEntityState(this, (byte)7);
-				} else if(flag && this.canFallInLove() && i == 0 && this.rand.nextInt(15) == 0) {
-					this.consumeItemFromStack(p_230254_1_, itemstack);
-					this.setInLove(p_230254_1_);
-					return ActionResultType.SUCCESS;
-				} else if (flag && this.isChild()) {
-					this.consumeItemFromStack(p_230254_1_, itemstack);
-					this.ageUp((int)((float)(-i / 20) * 0.1F), true);
-					return ActionResultType.func_233537_a_(this.world.isRemote);
-				}
-				else {
-					this.world.setEntityState(this, (byte)6);
-				}
-
-				return ActionResultType.SUCCESS;
-			} else {
-				return actionresulttype;
-			}
 		}
 	}
 
@@ -511,7 +422,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 			ravagerentity.setOwnerId(uuid);
 			ravagerentity.setTamed(true);
 		}
-
 		return ravagerentity;
 	}
 
@@ -594,7 +504,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 
 	public void travel(Vector3d travelVector) {
 		if (this.isAlive()) {
-			if (this.isBeingRidden() && this.canBeSteered() && this.isHorseSaddled()) {
+			if (this.isBeingRidden() && this.canBeSteered() && this.isSaddled()) {
 				LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
 				this.rotationYaw = livingentity.rotationYaw;
 				this.prevRotationYaw = this.rotationYaw;
@@ -606,7 +516,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 				float f1 = livingentity.moveForward;
 				if (f1 <= 0.0F) {
 					f1 *= 0.25F;
-					this.gallopTime = 0;
 				}
 
 
@@ -627,36 +536,89 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IJu
 	}
 
 	@Override
-	public void func_230266_a_(@Nullable SoundCategory p_230266_1_) {
-		this.field_234214_bx_.setSaddledFromBoolean(true);
-		if (p_230266_1_ != null) {
-			this.world.playMovingSound((PlayerEntity)null, this, SoundEvents.ENTITY_PIG_SADDLE, p_230266_1_, 0.5F, 1.0F);
-		}
-	}
-
-	@Override
-	public void setJumpPower(int jumpPowerIn) {
-
-	}
-
-	@Override
-	public boolean canJump() {
-		return false;
-	}
-
-	@Override
-	public void handleStartJump(int jumpPower) {
-
-	}
-
-	@Override
-	public void handleStopJump() {
-
-	}
-
-	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(RCItems.RAVAGER_SPAWN_EGG.get());
+	}
+
+	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+		ItemStack itemstack = player.getHeldItem(hand);
+		Item item = itemstack.getItem();
+		if (item == RCItems.RAVAGER_MILK.get() && !this.isTamed()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+				this.setTamedBy(player);
+				this.navigator.clearPath();
+				this.setAttackTarget((LivingEntity)null);
+				this.func_233687_w_(true);
+				this.world.setEntityState(this, (byte)7);
+			} else {
+				this.world.setEntityState(this, (byte)6);
+			}
+			return ActionResultType.SUCCESS;
+		} else if (this.isBreedingItem(itemstack) && this.getHealth() < this.getMaxHealth()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			this.heal(2F);
+			return ActionResultType.SUCCESS;
+		} else if (this.isTamed() && !this.isChild() && item == Items.SADDLE) {
+			this.setSaddled(true);
+			world.playMovingSound(player, this, SoundEvents.ENTITY_PIG_SADDLE, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			return ActionResultType.SUCCESS;
+		} else if (this.isSaddled() && item == Items.AIR) {
+			player.startRiding(this);
+			return ActionResultType.SUCCESS;
+		} else if (this.isTamed() && item == Items.BUCKET && !this.isChild()) {
+			player.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
+			ItemStack itemstack1 = DrinkHelper.fill(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
+			player.setHeldItem(hand, itemstack1);
+			return ActionResultType.func_233537_a_(this.world.isRemote);
+		}
+		return super.func_230254_b_(player, hand);
+	}
+
+	class UntamedAttackGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
+
+		RavageAndCabbageRavagerEntity goalOwner;
+		
+		public UntamedAttackGoal(RavageAndCabbageRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight) {
+			this(goalOwnerIn, targetClassIn, checkSight, false);
+		}
+
+		public UntamedAttackGoal(RavageAndCabbageRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight, boolean nearbyOnlyIn) {
+			this(goalOwnerIn, targetClassIn, 10, checkSight, nearbyOnlyIn, (Predicate<LivingEntity>)null);
+		}
+
+		public UntamedAttackGoal(RavageAndCabbageRavagerEntity goalOwnerIn, Class<T> targetClassIn, int targetChanceIn, boolean checkSight, boolean nearbyOnlyIn, @Nullable Predicate<LivingEntity> targetPredicate) {
+			super(goalOwnerIn, targetClassIn, targetChanceIn, checkSight, nearbyOnlyIn, targetPredicate);
+			this.goalOwner = goalOwnerIn;
+		}
+		
+		public boolean shouldExecute() {
+			if (super.shouldExecute() && !goalOwner.isChild() && !goalOwner.isTamed()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public void resetTask() {
+			super.resetTask();
+		}
+		
+		public boolean shouldContinueExecuting() {
+			if (super.shouldContinueExecuting()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 	}
 
 }

@@ -36,7 +36,7 @@ public class RavagerRenderer extends MobRenderer<RavageAndCabbageRavagerEntity, 
     public ResourceLocation getEntityTexture(RavageAndCabbageRavagerEntity entity) {
         if (entity.isChild()) {
             return BABY_TEXTURE;
-        } else if (entity.isHorseSaddled()) {
+        } else if (entity.isSaddled()) {
         	return SADDLE_TEXTURE;
         } else {
         	return TEXTURE;
