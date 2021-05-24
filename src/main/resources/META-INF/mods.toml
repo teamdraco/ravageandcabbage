@@ -3,7 +3,7 @@ loaderVersion="[35,)" #mandatory This is typically bumped every Minecraft versio
 license="All rights reserved"
 [[mods]] #mandatory
 modId="ravageandcabbage" #mandatory
-version="0.1.1" #mandatory
+version="0.1.2" #mandatory
 displayName="Ravage & Cabbage" #mandatory
 credits="Coda (Assets), Ninni (Assets), Larry (Building and Idea), & superlord9362 (Code)" #optional
 authors="superlord9362" #optional
