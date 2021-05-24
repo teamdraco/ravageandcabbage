@@ -116,12 +116,12 @@ public class CabbagerEntity extends AbstractIllagerEntity implements IRangedAtta
 
 	@Nullable
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundEvents.ENTITY_PILLAGER_DEATH;
+		return SoundEvents.ENTITY_PILLAGER_HURT;
 	}
 
 	@Nullable
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_PILLAGER_HURT;
+		return SoundEvents.ENTITY_PILLAGER_DEATH;
 	}
 
 	@OnlyIn(Dist.CLIENT)
