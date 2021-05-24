@@ -2,6 +2,8 @@ package superlord.ravagecabbage.init;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -16,8 +18,8 @@ import superlord.ravagecabbage.world.structures.StableStructure;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RCStructures {
-	public static IStructurePieceType STABLE_PIECE_TYPE = null;
-	
+	public static IStructurePieceType STABLE_PIECE_TYPE = StableStructure.Piece::new;
+
 	public static final DeferredRegister<Structure<?>> REGISTER = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, RavageAndCabbage.MOD_ID);
 
 	public static final RegistryObject<Structure<NoFeatureConfig>> STABLE = REGISTER.register("stable", () -> (new StableStructure(NoFeatureConfig.field_236558_a_)));
@@ -34,5 +36,10 @@ public class RCStructures {
 		}
 
 		DimensionStructuresSettings.field_236191_b_ = ImmutableMap.<Structure<?>, StructureSeparationSettings>builder().putAll(DimensionStructuresSettings.field_236191_b_).put(structure, structureSeparationSettings).build();
+	}
+
+	public static void registerStructurePieces() {
+		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(RavageAndCabbage.MOD_ID, "stable"), STABLE_PIECE_TYPE);
+
 	}
 }

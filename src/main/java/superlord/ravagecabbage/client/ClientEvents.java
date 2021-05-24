@@ -12,7 +12,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.client.render.CabbageRenderer;
 import superlord.ravagecabbage.client.render.CabbagerRenderer;
-import superlord.ravagecabbage.client.render.RavagerRenderer;
+import superlord.ravagecabbage.client.render.RCRavagerRenderer;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.items.RavageAndCabbageSpawnEggItem;
 
@@ -24,7 +24,7 @@ public class ClientEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
 		RenderingRegistry.registerEntityRenderingHandler(RCEntities.CABBAGE.get(), CabbageRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(RCEntities.CABBAGER.get(), CabbagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(RCEntities.RAVAGER.get(), manager -> new RavagerRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(RCEntities.RAVAGER.get(), manager -> new RCRavagerRenderer());
 	}
 	
 	@SubscribeEvent

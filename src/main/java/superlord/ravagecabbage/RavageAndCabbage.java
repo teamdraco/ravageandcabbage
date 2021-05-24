@@ -31,7 +31,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import superlord.ravagecabbage.entity.CabbagerEntity;
-import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
+import superlord.ravagecabbage.entity.RCRavagerEntity;
 import superlord.ravagecabbage.init.*;
 
 import java.lang.reflect.Method;
@@ -68,6 +68,7 @@ public class RavageAndCabbage {
     public void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             RCStructures.setupStructures();
+            RCStructures.registerStructurePieces();
             RCConfiguredStructures.registerConfiguredStructures();
 
             WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
@@ -90,7 +91,7 @@ public class RavageAndCabbage {
     
     private void registerEntityAttributes() {
         GlobalEntityTypeAttributes.put(RCEntities.CABBAGER.get(), CabbagerEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(RCEntities.RAVAGER.get(), RavageAndCabbageRavagerEntity.func_234233_eS_().create());
+        GlobalEntityTypeAttributes.put(RCEntities.RAVAGER.get(), RCRavagerEntity.func_234233_eS_().create());
     }
 
     public final static ItemGroup GROUP = new ItemGroup("ravageandcabbage_item_group") {

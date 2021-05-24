@@ -7,10 +7,10 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
+import superlord.ravagecabbage.entity.RCRavagerEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity> {
+public class RCRavagerModel extends SegmentedModel<RCRavagerEntity> {
 	private final ModelRenderer head;
 	private final ModelRenderer jaw;
 	private final ModelRenderer body;
@@ -27,22 +27,22 @@ public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity
 		this.neck.setRotationPoint(0.0F, -7.0F, -1.5F);
 		this.neck.setTextureOffset(68, 73).addBox(-5.0F, -1.0F, -18.0F, 10.0F, 10.0F, 18.0F, 0.0F);
 		this.head = new ModelRenderer(this);
-		this.head.setRotationPoint(0.0F, 16.0F, -17.0F);
-		this.head.setTextureOffset(0, 0).addBox(-8.0F, -20.0F, -14.0F, 16.0F, 20.0F, 16.0F, 0.0F);
-		this.head.setTextureOffset(0, 0).addBox(-2.0F, -6.0F, -18.0F, 4.0F, 8.0F, 4.0F, 0.0F);
+		this.head.setRotationPoint(0.0F, 10.0F, -17.0F);
+		this.head.setTextureOffset(0, 0).addBox(-8.0F, -14.0F, -14.0F, 16.0F, 20.0F, 16.0F, 0.0F);
+		this.head.setTextureOffset(0, 0).addBox(-2.0F, 0.0F, -18.0F, 4.0F, 8.0F, 4.0F, 0.0F);
 		ModelRenderer modelrenderer = new ModelRenderer(this);
-		modelrenderer.setRotationPoint(-10.0F, -14.0F, -8.0F);
+		modelrenderer.setRotationPoint(-10.0F, -2.0F, -8.0F);
 		modelrenderer.setTextureOffset(74, 55).addBox(0.0F, -14.0F, -2.0F, 2.0F, 14.0F, 4.0F, 0.0F);
 		modelrenderer.rotateAngleX = 1.0995574F;
 		this.head.addChild(modelrenderer);
 		ModelRenderer modelrenderer1 = new ModelRenderer(this);
 		modelrenderer1.mirror = true;
-		modelrenderer1.setRotationPoint(8.0F, -14.0F, -8.0F);
+		modelrenderer1.setRotationPoint(8.0F, -2.0F, -8.0F);
 		modelrenderer1.setTextureOffset(74, 55).addBox(0.0F, -14.0F, -2.0F, 2.0F, 14.0F, 4.0F, 0.0F);
 		modelrenderer1.rotateAngleX = 1.0995574F;
 		this.head.addChild(modelrenderer1);
 		this.jaw = new ModelRenderer(this);
-		this.jaw.setRotationPoint(0.0F, -2.0F, 2.0F);
+		this.jaw.setRotationPoint(0.0F, 4.0F, 2.0F);
 		this.jaw.setTextureOffset(0, 36).addBox(-8.0F, 0.0F, -16.0F, 16.0F, 3.0F, 16.0F, 0.0F);
 		this.head.addChild(this.jaw);
 		this.neck.addChild(this.head);
@@ -74,7 +74,7 @@ public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity
 	 * Sets this entity's model rotation angles
 	 */
 	 @Override
-	 public void setRotationAngles(RavageAndCabbageRavagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	 public void setRotationAngles(RCRavagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		 this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
 		 this.head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 		 this.body.rotateAngleX = ((float)Math.PI / 2F);
@@ -91,7 +91,7 @@ public class RCRavagerModel extends SegmentedModel<RavageAndCabbageRavagerEntity
 		 }
 	 }
 
-	 public void setLivingAnimations(RavageAndCabbageRavagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+	 public void setLivingAnimations(RCRavagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
 		 super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
 		 int i = entityIn.func_213684_dX();
 		 int j = entityIn.func_213687_eg();

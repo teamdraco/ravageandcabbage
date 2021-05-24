@@ -77,25 +77,26 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.init.RCItems;
 
-public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRideable, IEquipable {
+public class RCRavagerEntity extends TameableEntity implements IRideable, IEquipable {
 	private static final Predicate<Entity> field_213690_b = (p_213685_0_) -> {
-		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RavageAndCabbageRavagerEntity);
+		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RCRavagerEntity);
 	};
-	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(RavageAndCabbageRavagerEntity.class, DataSerializers.VARINT);
+	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.VARINT);
 	private int attackTick;
 	private int stunTick;
 	private int roarTick;
 	private final BoostHelper field_234214_bx_ = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
 
-	public RavageAndCabbageRavagerEntity(EntityType<? extends RavageAndCabbageRavagerEntity> p_i50250_1_, World p_i50250_2_) {
+	public RCRavagerEntity(EntityType<? extends RCRavagerEntity> p_i50250_1_, World p_i50250_2_) {
 		super(p_i50250_1_, p_i50250_2_);
+		this.stepHeight = 1.0F;
 	}
 
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new SwimGoal(this));
-		this.goalSelector.addGoal(4, new RavageAndCabbageRavagerEntity.AttackGoal());
+		this.goalSelector.addGoal(4, new RCRavagerEntity.AttackGoal());
 		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.4D));
 		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
@@ -309,10 +310,6 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRi
 						flag = this.world.destroyBlock(blockpos, true, this) || flag;
 					}
 				}
-
-				if (!flag && this.onGround) {
-					this.jump();
-				}
 			}
 
 			if (this.roarTick > 0) {
@@ -422,8 +419,8 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRi
 		p_213688_1_.addVelocity(d0 / d2 * 4.0D, 0.2D, d1 / d2 * 4.0D);
 	}
 
-	public RavageAndCabbageRavagerEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-		RavageAndCabbageRavagerEntity ravagerentity = RCEntities.RAVAGER.get().create(p_241840_1_);
+	public RCRavagerEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+		RCRavagerEntity ravagerentity = RCEntities.RAVAGER.get().create(p_241840_1_);
 		UUID uuid = this.getOwnerId();
 		if (uuid != null) {
 			ravagerentity.setOwnerId(uuid);
@@ -437,10 +434,10 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRi
 			return false;
 		} else if (!this.isTamed()) {
 			return false;
-		} else if (!(otherAnimal instanceof RavageAndCabbageRavagerEntity)) {
+		} else if (!(otherAnimal instanceof RCRavagerEntity)) {
 			return false;
 		} else {
-			RavageAndCabbageRavagerEntity ravagerentity = (RavageAndCabbageRavagerEntity)otherAnimal;
+			RCRavagerEntity ravagerentity = (RCRavagerEntity)otherAnimal;
 			if (!ravagerentity.isTamed()) {
 				return false;
 			} else if (ravagerentity.isEntitySleeping()) {
@@ -480,11 +477,11 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRi
 
 	class AttackGoal extends MeleeAttackGoal {
 		public AttackGoal() {
-			super(RavageAndCabbageRavagerEntity.this, 1.0D, true);
+			super(RCRavagerEntity.this, 1.0D, true);
 		}
 
 		protected double getAttackReachSqr(LivingEntity attackTarget) {
-			float f = RavageAndCabbageRavagerEntity.this.getWidth() - 0.1F;
+			float f = RCRavagerEntity.this.getWidth() - 0.1F;
 			return (double)(f * 2.0F * f * 2.0F + attackTarget.getWidth());
 		}
 	}
@@ -495,7 +492,7 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRi
 		}
 
 		protected PathFinder getPathFinder(int p_179679_1_) {
-			this.nodeProcessor = new RavageAndCabbageRavagerEntity.Processor();
+			this.nodeProcessor = new RCRavagerEntity.Processor();
 			return new PathFinder(this.nodeProcessor, p_179679_1_);
 		}
 	}
@@ -590,17 +587,17 @@ public class RavageAndCabbageRavagerEntity extends TameableEntity implements IRi
 
 	class UntamedAttackGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
 
-		RavageAndCabbageRavagerEntity goalOwner;
+		RCRavagerEntity goalOwner;
 
-		public UntamedAttackGoal(RavageAndCabbageRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight) {
+		public UntamedAttackGoal(RCRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight) {
 			this(goalOwnerIn, targetClassIn, checkSight, false);
 		}
 
-		public UntamedAttackGoal(RavageAndCabbageRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight, boolean nearbyOnlyIn) {
+		public UntamedAttackGoal(RCRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight, boolean nearbyOnlyIn) {
 			this(goalOwnerIn, targetClassIn, 10, checkSight, nearbyOnlyIn, (Predicate<LivingEntity>)null);
 		}
 
-		public UntamedAttackGoal(RavageAndCabbageRavagerEntity goalOwnerIn, Class<T> targetClassIn, int targetChanceIn, boolean checkSight, boolean nearbyOnlyIn, @Nullable Predicate<LivingEntity> targetPredicate) {
+		public UntamedAttackGoal(RCRavagerEntity goalOwnerIn, Class<T> targetClassIn, int targetChanceIn, boolean checkSight, boolean nearbyOnlyIn, @Nullable Predicate<LivingEntity> targetPredicate) {
 			super(goalOwnerIn, targetClassIn, targetChanceIn, checkSight, nearbyOnlyIn, targetPredicate);
 			this.goalOwner = goalOwnerIn;
 		}

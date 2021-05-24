@@ -37,7 +37,7 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.entity.CabbagerEntity;
-import superlord.ravagecabbage.entity.RavageAndCabbageRavagerEntity;
+import superlord.ravagecabbage.entity.RCRavagerEntity;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.init.RCLootTables;
 import superlord.ravagecabbage.init.RCStructures;
@@ -148,7 +148,7 @@ public class StableStructure extends Structure<NoFeatureConfig> {
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
             if ("baby".equals(function)) {
                 worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
-                RavageAndCabbageRavagerEntity entity = RCEntities.RAVAGER.get().create(worldIn.getWorld());
+                RCRavagerEntity entity = RCEntities.RAVAGER.get().create(worldIn.getWorld());
                 if (entity != null) {
                     entity.setGrowingAge(-24000);
                     entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
