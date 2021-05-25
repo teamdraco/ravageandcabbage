@@ -34,5 +34,4 @@ public class ClientEvents {
         IItemColor eggColor = (stack, tintIndex) -> ((RavageAndCabbageSpawnEggItem) stack.getItem()).getColor(tintIndex);
         for (RavageAndCabbageSpawnEggItem e : RavageAndCabbageSpawnEggItem.UNADDED_EGGS) handler.register(eggColor, e);
     }
-
 }

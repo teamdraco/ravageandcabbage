@@ -77,6 +77,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.init.RCItems;
 
+import static net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent;
+
 public class RCRavagerEntity extends TameableEntity implements IRideable, IEquipable {
 	private static final Predicate<Entity> field_213690_b = (p_213685_0_) -> {
 		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RCRavagerEntity);
@@ -102,7 +104,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
 		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-		this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
+		this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, AbstractRaiderEntity.class, RCRavagerEntity.class)).setCallsForHelp());
 		this.targetSelector.addGoal(3, new UntamedAttackGoal<PlayerEntity>(this, PlayerEntity.class, true));
 		this.targetSelector.addGoal(4, new UntamedAttackGoal<AbstractVillagerEntity>(this, AbstractVillagerEntity.class, true));
 		this.targetSelector.addGoal(4, new UntamedAttackGoal<IronGolemEntity>(this, IronGolemEntity.class, true));
@@ -253,18 +255,22 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return stack.getItem() == RCItems.CABBAGE.get();
 	}
 
+	@Override
 	protected SoundEvent getAmbientSound() {
 		return SoundEvents.ENTITY_RAVAGER_AMBIENT;
 	}
 
+	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
 		return SoundEvents.ENTITY_RAVAGER_HURT;
 	}
 
+	@Override
 	protected SoundEvent getDeathSound() {
 		return SoundEvents.ENTITY_RAVAGER_DEATH;
 	}
 
+	@Override
 	public float getEyeHeight(Pose pose) {
 		return this.isChild() ? this.getHeight() : 2.0F;
 	}
@@ -273,14 +279,17 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 100.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D).createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.75D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 12.0D).createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.5D).createMutableAttribute(Attributes.FOLLOW_RANGE, 32.0D);
 	}
 
+	@Override
 	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
 		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 
+	@Override
 	protected float getSoundVolume() {
 		return 0.4F;
 	}
 
+	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		this.attackTick = 10;
 		this.world.setEntityState(this, (byte)4);
@@ -288,6 +297,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return super.attackEntityAsMob(entityIn);
 	}
 
+	@Override
 	public void livingTick() {
 		super.livingTick();
 		if (this.isAlive()) {
@@ -299,7 +309,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 				this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(MathHelper.lerp(0.1D, d1, d0));
 			}
 
-			if (this.collidedHorizontally && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+			if (!world.isRemote && !getMobGriefingEvent(this.world, this)) {
 				boolean flag = false;
 				AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(0.2D);
 
@@ -482,7 +492,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 
 		protected double getAttackReachSqr(LivingEntity attackTarget) {
 			float f = RCRavagerEntity.this.getWidth() - 0.1F;
-			return (double)(f * 2.0F * f * 2.0F + attackTarget.getWidth());
+			return (f * 2.0F * f * 2.0F + attackTarget.getWidth());
 		}
 	}
 
@@ -553,7 +563,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
 				this.setTamedBy(player);
 				this.navigator.clearPath();
-				this.setAttackTarget((LivingEntity)null);
+				this.setAttackTarget(null);
 				this.func_233687_w_(true);
 				this.world.setEntityState(this, (byte)7);
 			} else {

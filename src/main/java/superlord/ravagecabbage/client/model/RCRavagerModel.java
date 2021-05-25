@@ -31,13 +31,13 @@ public class RCRavagerModel extends SegmentedModel<RCRavagerEntity> {
 		this.head.setTextureOffset(0, 0).addBox(-8.0F, -14.0F, -14.0F, 16.0F, 20.0F, 16.0F, 0.0F);
 		this.head.setTextureOffset(0, 0).addBox(-2.0F, 0.0F, -18.0F, 4.0F, 8.0F, 4.0F, 0.0F);
 		ModelRenderer modelrenderer = new ModelRenderer(this);
-		modelrenderer.setRotationPoint(-10.0F, -2.0F, -8.0F);
+		modelrenderer.setRotationPoint(-10.0F, -8.0F, -8.0F);
 		modelrenderer.setTextureOffset(74, 55).addBox(0.0F, -14.0F, -2.0F, 2.0F, 14.0F, 4.0F, 0.0F);
 		modelrenderer.rotateAngleX = 1.0995574F;
 		this.head.addChild(modelrenderer);
 		ModelRenderer modelrenderer1 = new ModelRenderer(this);
 		modelrenderer1.mirror = true;
-		modelrenderer1.setRotationPoint(8.0F, -2.0F, -8.0F);
+		modelrenderer1.setRotationPoint(8.0F, -8.0F, -8.0F);
 		modelrenderer1.setTextureOffset(74, 55).addBox(0.0F, -14.0F, -2.0F, 2.0F, 14.0F, 4.0F, 0.0F);
 		modelrenderer1.rotateAngleX = 1.0995574F;
 		this.head.addChild(modelrenderer1);

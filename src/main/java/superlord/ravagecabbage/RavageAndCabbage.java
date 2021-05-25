@@ -17,6 +17,7 @@ import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -50,6 +51,7 @@ public class RavageAndCabbage {
         bus.addListener(this::registerCommon);
         bus.addListener(this::doClientStuff);
         bus.addListener(this::setup);
+        bus.addListener(this::registerEntityAttributes);
 
         RCEntities.REGISTER.register(bus);
         RCItems.REGISTER.register(bus);
@@ -60,9 +62,8 @@ public class RavageAndCabbage {
         forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
         forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
     }
-    
+
     private void registerCommon(FMLCommonSetupEvent event) {
-        registerEntityAttributes();
     }
 
     public void setup(final FMLCommonSetupEvent event) {
@@ -89,9 +90,9 @@ public class RavageAndCabbage {
     private void doClientStuff(final FMLClientSetupEvent event) {
     }
     
-    private void registerEntityAttributes() {
-        GlobalEntityTypeAttributes.put(RCEntities.CABBAGER.get(), CabbagerEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(RCEntities.RAVAGER.get(), RCRavagerEntity.func_234233_eS_().create());
+    private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(RCEntities.CABBAGER.get(), CabbagerEntity.createAttributes().create());
+        event.put(RCEntities.RAVAGER.get(), RCRavagerEntity.func_234233_eS_().create());
     }
 
     public final static ItemGroup GROUP = new ItemGroup("ravageandcabbage_item_group") {
