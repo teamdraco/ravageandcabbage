@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Logger;
 import superlord.ravagecabbage.entity.CabbagerEntity;
 import superlord.ravagecabbage.entity.RCRavagerEntity;
 import superlord.ravagecabbage.init.*;
+import superlord.ravagecabbage.network.RCNetwork;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -49,7 +50,6 @@ public class RavageAndCabbage {
     public RavageAndCabbage() {
     	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::registerCommon);
-        bus.addListener(this::doClientStuff);
         bus.addListener(this::setup);
         bus.addListener(this::registerEntityAttributes);
 
@@ -63,7 +63,8 @@ public class RavageAndCabbage {
         forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
     }
 
-    private void registerCommon(FMLCommonSetupEvent event) {
+    private void registerCommon(final FMLCommonSetupEvent event) {
+        RCNetwork.init();
     }
 
     public void setup(final FMLCommonSetupEvent event) {
@@ -85,9 +86,6 @@ public class RavageAndCabbage {
                 }
             });
         });
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
     }
     
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {

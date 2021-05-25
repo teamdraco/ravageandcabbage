@@ -11,5 +11,8 @@
 	"entity.ravageandcabbage.cabbager": "Cabbager",
 	"entity.ravageandcabbage.cabbage": "Thrown Cabbage",
 	
-	"block.ravageandcabbage.cabbage_crop": "Cabbage Crop"
+	"block.ravageandcabbage.cabbage_crop": "Cabbage Crop",
+
+	"key.ravageandcabbage.attack_key": "Attack",
+	"key.category.ravageandcabbage": "Ravage and Cabbage"
 }
