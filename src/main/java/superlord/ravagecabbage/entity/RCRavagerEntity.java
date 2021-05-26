@@ -539,7 +539,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			this.setSaddled(true);
 			world.playMovingSound(player, this, SoundEvents.ENTITY_PIG_SADDLE, SoundCategory.AMBIENT, 0.5F, 1.0F);
 			return ActionResultType.CONSUME;
-		} else if (!this.hasHornArmor() && this.isTamed() && !this.isChild() && item == RCItems.DIAMOND_HORN_ARMOR.get()) {
+		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == Items.AIR) && this.isTamed() && !this.isChild() && item == RCItems.DIAMOND_HORN_ARMOR.get()) {
 			if (!player.abilities.isCreativeMode) {
 				itemstack.shrink(1);
 			}

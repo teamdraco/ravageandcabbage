@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
@@ -34,7 +35,7 @@ public class InputMessage {
             Entity vehicle = player.getRidingEntity();
             if (vehicle instanceof RCRavagerEntity) {
                 RCRavagerEntity ravager = ((RCRavagerEntity) vehicle);
-                if (ravager.hasHornArmor() && ravager.getItemStackFromSlot(EquipmentSlotType.HEAD).getDamage() < ravager.getItemStackFromSlot(EquipmentSlotType.HEAD).getMaxDamage() && ravager.isTamed() && ravager.getControllingPassenger() == player) {
+                if (ravager.hasHornArmor() && ravager.getItemStackFromSlot(EquipmentSlotType.HEAD).getDamage() <= ravager.getItemStackFromSlot(EquipmentSlotType.HEAD).getMaxDamage() && ravager.isTamed() && ravager.getControllingPassenger() == player) {
                     if (ravager.attackTick == 0) {
                         ravager.attackTick = 30;
                         ravager.world.setEntityState(ravager, (byte)4);

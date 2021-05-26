@@ -22,6 +22,6 @@ public class RCItems {
     public static final RegistryObject<Item> CABBAGE_THROWABLE = REGISTER.register("throwable_cabbage", () -> new ThrowableCabbageItem(new Item.Properties().maxStackSize(1)));
     public static final RegistryObject<Item> CABBAGER_SPAWN_EGG = REGISTER.register("cabbager_spawn_egg", () -> new RavageAndCabbageSpawnEggItem(RCEntities.CABBAGER, 0x959B9B, 0x708438, new Item.Properties().group(RavageAndCabbage.GROUP)));
     public static final RegistryObject<Item> RAVAGER_SPAWN_EGG = REGISTER.register("ravager_spawn_egg", () -> new RavageAndCabbageSpawnEggItem(RCEntities.RAVAGER, 0x454040, 0x6a6965, new Item.Properties().group(RavageAndCabbage.GROUP)));
-    public static final RegistryObject<Item> DIAMOND_HORN_ARMOR = REGISTER.register("diamond_horn_armor", () -> new RavagerHornArmorItem(5, "diamond", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(200)));
+    public static final RegistryObject<Item> DIAMOND_HORN_ARMOR = REGISTER.register("diamond_horn_armor", () -> new RavagerHornArmorItem(5, "diamond", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(1)));
 
 }
