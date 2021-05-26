@@ -15,12 +15,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IEquipable;
-import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.IRideable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.BreedGoal;
@@ -37,12 +35,13 @@ import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.GhastEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.HorseArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -70,15 +69,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.ravagecabbage.init.RCEntities;
 import superlord.ravagecabbage.init.RCItems;
+import superlord.ravagecabbage.items.RavagerHornArmorItem;
 
 import static net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent;
 
@@ -87,6 +85,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RCRavagerEntity);
 	};
 	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> HORN_ARMOR = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.VARINT);
 	public int attackTick;
 	private int stunTick;
@@ -99,6 +98,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		this.navigator = new Navigator(this, world);
 	}
 
+	@Override
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(1, new SwimGoal(this));
@@ -110,9 +110,9 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(3, new HurtByTargetGoal(this, AbstractRaiderEntity.class, RCRavagerEntity.class).setCallsForHelp());
-		this.targetSelector.addGoal(4, new UntamedAttackGoal<PlayerEntity>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(5, new UntamedAttackGoal<AbstractVillagerEntity>(this, AbstractVillagerEntity.class, true));
-		this.targetSelector.addGoal(5, new UntamedAttackGoal<IronGolemEntity>(this, IronGolemEntity.class, true));
+		this.targetSelector.addGoal(4, new UntamedAttackGoal<>(this, PlayerEntity.class, true));
+		this.targetSelector.addGoal(5, new UntamedAttackGoal<>(this, AbstractVillagerEntity.class, true));
+		this.targetSelector.addGoal(5, new UntamedAttackGoal<>(this, IronGolemEntity.class, true));
 	}
 
 	public boolean isSaddled() {
@@ -123,26 +123,42 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		this.dataManager.set(SADDLED, isSaddled);
 	}
 
+	public boolean hasHornArmor() {
+		return this.dataManager.get(HORN_ARMOR);
+	}
+
+	public void setHasHornArmor(boolean hasHornArmor) {
+		this.dataManager.set(HORN_ARMOR, hasHornArmor);
+	}
+
+	@Override
 	protected void registerData() {
 		super.registerData();
 		this.dataManager.register(BOOST_TIME, 0);
 		this.dataManager.register(SADDLED, false);
+		this.dataManager.register(HORN_ARMOR, false);
 	}
 
+	@Override
 	protected void dropInventory() {
 		super.dropInventory();
 		if (this.isSaddled()) {
 			this.entityDropItem(Items.SADDLE);
 		}
+		if (this.hasHornArmor()) {
+			ItemStack hornArmor = this.getItemStackFromSlot(EquipmentSlotType.HEAD);
+			this.entityDropItem(hornArmor);
+		}
 	}
 
+	@Override
 	public Vector3d func_230268_c_(LivingEntity livingEntity) {
-		Vector3d vector3d = func_233559_a_((double)this.getWidth(), (double)livingEntity.getWidth(), this.rotationYaw + (livingEntity.getPrimaryHand() == HandSide.RIGHT ? 90.0F : -90.0F));
+		Vector3d vector3d = func_233559_a_(this.getWidth(), livingEntity.getWidth(), this.rotationYaw + (livingEntity.getPrimaryHand() == HandSide.RIGHT ? 90.0F : -90.0F));
 		Vector3d vector3d1 = this.func_234236_a_(vector3d, livingEntity);
 		if (vector3d1 != null) {
 			return vector3d1;
 		} else {
-			Vector3d vector3d2 = func_233559_a_((double)this.getWidth(), (double)livingEntity.getWidth(), this.rotationYaw + (livingEntity.getPrimaryHand() == HandSide.LEFT ? 90.0F : -90.0F));
+			Vector3d vector3d2 = func_233559_a_(this.getWidth(), livingEntity.getWidth(), this.rotationYaw + (livingEntity.getPrimaryHand() == HandSide.LEFT ? 90.0F : -90.0F));
 			Vector3d vector3d3 = this.func_234236_a_(vector3d2, livingEntity);
 			return vector3d3 != null ? vector3d3 : this.getPositionVec();
 		}
@@ -184,17 +200,14 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return null;
 	}
 
+	@Override
 	public float getMountedSpeed() {
 		return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED);
 	}
 
+	@Override
 	public boolean canBeSteered() {
 		return this.getControllingPassenger() instanceof LivingEntity;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public Vector3d func_241205_ce_() {
-		return new Vector3d(0.0D, (0.6F * this.getEyeHeight()), (this.getWidth() * 0.4F));
 	}
 
 	@Override
@@ -202,22 +215,25 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return isChild() ? 0.7F : 1.3F;
 	}
 
+	@Override
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
 		compound.putInt("AttackTick", this.attackTick);
 		compound.putInt("StunTick", this.stunTick);
 		compound.putInt("RoarTick", this.roarTick);
 		compound.putBoolean("IsSaddled", this.isSaddled());
-
+		compound.putBoolean("HasHornArmor", this.hasHornArmor());
 	}
 
+	@Override
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
 		this.attackTick = compound.getInt("AttackTick");
 		this.stunTick = compound.getInt("StunTick");
 		this.roarTick = compound.getInt("RoarTick");
 		this.setSaddled(compound.getBoolean("IsSaddled"));
-	}	   
+		this.setHasHornArmor(compound.getBoolean("HasHornArmor"));
+	}
 
 	@Override
 	public void setTamed(boolean tamed) {
@@ -238,6 +254,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		}
 	}
 
+	@Override
 	protected boolean canFitPassenger(Entity passenger) {
 		return this.getPassengers().size() < 2;
 	}
@@ -283,11 +300,6 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 	}
 
 	@Override
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-	}
-
-	@Override
 	protected float getSoundVolume() {
 		return 0.4F;
 	}
@@ -310,7 +322,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 				this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(MathHelper.lerp(0.1D, d1, d0));
 			}
 
-			if (!world.isRemote && !getMobGriefingEvent(this.world, this)) {
+			if (!world.isRemote && getMobGriefingEvent(this.world, this)) {
 				boolean flag = false;
 				AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(0.2D);
 
@@ -343,20 +355,9 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 				}
 			}
 		}
-		if (this.world.isRemote) {
-			if (this.isAlive() && isTamed()) {
-				int i = this.getGrowingAge();
-				if (i < 0) {
-					++i;
-					this.setGrowingAge(i);
-				} else if (i > 0) {
-					--i;
-					this.setGrowingAge(i);
-				}
-			}
-		}
 	}
 
+	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source)) {
 			return false;
@@ -371,10 +372,12 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		}
 	}
 
+	@Override
 	public boolean canEntityBeSeen(Entity entityIn) {
 		return this.stunTick <= 0 && this.roarTick <= 0 && super.canEntityBeSeen(entityIn);
 	}
 
+	@Override
 	protected void constructKnockBackVector(LivingEntity entityIn) {
 		if (this.roarTick == 0) {
 			if (this.rand.nextDouble() < 0.5D) {
@@ -414,9 +417,9 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 
 	private void func_213682_eh() {
 		if (this.rand.nextInt(6) == 0) {
-			double d0 = this.getPosX() - (double)this.getWidth() * Math.sin((double)(this.renderYawOffset * ((float)Math.PI / 180F))) + (this.rand.nextDouble() * 0.6D - 0.3D);
+			double d0 = this.getPosX() - (double)this.getWidth() * Math.sin((this.renderYawOffset * ((float)Math.PI / 180F))) + (this.rand.nextDouble() * 0.6D - 0.3D);
 			double d1 = this.getPosY() + (double)this.getHeight() - 0.3D;
-			double d2 = this.getPosZ() + (double)this.getWidth() * Math.cos((double)(this.renderYawOffset * ((float)Math.PI / 180F))) + (this.rand.nextDouble() * 0.6D - 0.3D);
+			double d2 = this.getPosZ() + (double)this.getWidth() * Math.cos((this.renderYawOffset * ((float)Math.PI / 180F))) + (this.rand.nextDouble() * 0.6D - 0.3D);
 			this.world.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
 		}
 
@@ -429,6 +432,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		p_213688_1_.addVelocity(d0 / d2 * 4.0D, 0.2D, d1 / d2 * 4.0D);
 	}
 
+	@Override
 	public RCRavagerEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
 		RCRavagerEntity ravagerentity = RCEntities.RAVAGER.get().create(p_241840_1_);
 		UUID uuid = this.getOwnerId();
@@ -437,25 +441,6 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			ravagerentity.setTamed(true);
 		}
 		return ravagerentity;
-	}
-
-	public boolean canMateWith(AnimalEntity otherAnimal) {
-		if (otherAnimal == this) {
-			return false;
-		} else if (!this.isTamed()) {
-			return false;
-		} else if (!(otherAnimal instanceof RCRavagerEntity)) {
-			return false;
-		} else {
-			RCRavagerEntity ravagerentity = (RCRavagerEntity)otherAnimal;
-			if (!ravagerentity.isTamed()) {
-				return false;
-			} else if (ravagerentity.isEntitySleeping()) {
-				return false;
-			} else {
-				return this.isInLove() && ravagerentity.isInLove();
-			}
-		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -485,6 +470,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return this.roarTick;
 	}
 
+	@Override
 	public void travel(Vector3d travelVector) {
 		if (this.isAlive()) {
 			if (this.isBeingRidden() && this.canBeSteered() && this.isSaddled()) {
@@ -520,6 +506,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return new ItemStack(RCItems.RAVAGER_SPAWN_EGG.get());
 	}
 
+	@Override
 	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
 		Item item = itemstack.getItem();
@@ -551,6 +538,14 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			}
 			this.setSaddled(true);
 			world.playMovingSound(player, this, SoundEvents.ENTITY_PIG_SADDLE, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			return ActionResultType.CONSUME;
+		} else if (!this.hasHornArmor() && this.isTamed() && !this.isChild() && item == RCItems.DIAMOND_HORN_ARMOR.get()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(RCItems.DIAMOND_HORN_ARMOR.get()));
+			world.playMovingSound(player, this, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			this.setHasHornArmor(true);
 			return ActionResultType.CONSUME;
 		} else if (this.isSaddled() && item == Items.AIR) {
 			player.startRiding(this);
@@ -587,6 +582,10 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 	@Override
 	public void travelTowards(Vector3d travelVec) {
 		super.travel(travelVec);		
+	}
+
+	public boolean isHornArmor(ItemStack stack) {
+		return stack.getItem() instanceof RavagerHornArmorItem;
 	}
 
 	@Override

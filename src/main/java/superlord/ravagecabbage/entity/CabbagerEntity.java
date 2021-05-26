@@ -46,7 +46,6 @@ import superlord.ravagecabbage.init.RCItems;
 public class CabbagerEntity extends AbstractIllagerEntity implements IRangedAttackMob {
 	private final Inventory inventory = new Inventory(5);
 
-
 	public CabbagerEntity(EntityType<? extends CabbagerEntity> type, World worldIn) {
 		super(type, worldIn);
 	}

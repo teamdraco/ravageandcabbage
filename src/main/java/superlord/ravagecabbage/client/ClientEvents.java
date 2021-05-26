@@ -27,7 +27,7 @@ public class ClientEvents {
 
 	    RenderingRegistry.registerEntityRenderingHandler(RCEntities.CABBAGE.get(), CabbageRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(RCEntities.CABBAGER.get(), CabbagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(RCEntities.RAVAGER.get(), manager -> new RCRavagerRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(RCEntities.RAVAGER.get(), RCRavagerRenderer::new);
 	}
 	
 	@SubscribeEvent

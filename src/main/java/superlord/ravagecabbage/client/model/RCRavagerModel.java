@@ -2,15 +2,19 @@ package superlord.ravagecabbage.client.model;
 
 import com.google.common.collect.ImmutableList;
 
+import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.ravagecabbage.entity.RCRavagerEntity;
 
+import java.util.Collections;
+
 @OnlyIn(Dist.CLIENT)
-public class RCRavagerModel extends SegmentedModel<RCRavagerEntity> {
+public class RCRavagerModel<T extends Entity> extends AgeableModel<RCRavagerEntity> {
 	private final ModelRenderer head;
 	private final ModelRenderer jaw;
 	private final ModelRenderer body;
@@ -66,13 +70,20 @@ public class RCRavagerModel extends SegmentedModel<RCRavagerEntity> {
 		this.legFrontLeft.setRotationPoint(8.0F, -13.0F, -5.0F);
 	}
 
+	@Override
+	protected Iterable<ModelRenderer> getHeadParts() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	protected Iterable<ModelRenderer> getBodyParts() {
+		return getParts();
+	}
+
 	public Iterable<ModelRenderer> getParts() {
 		return ImmutableList.of(this.neck, this.body, this.legBackRight, this.legBackLeft, this.legFrontRight, this.legFrontLeft);
 	}
 
-	/**
-	 * Sets this entity's model rotation angles
-	 */
 	 @Override
 	 public void setRotationAngles(RCRavagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		 this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
