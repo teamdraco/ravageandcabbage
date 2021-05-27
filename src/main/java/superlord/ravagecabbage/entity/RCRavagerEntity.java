@@ -539,6 +539,36 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			this.setSaddled(true);
 			world.playMovingSound(player, this, SoundEvents.ENTITY_PIG_SADDLE, SoundCategory.AMBIENT, 0.5F, 1.0F);
 			return ActionResultType.CONSUME;
+
+		//============================================//
+		//                Horn Armor                  //
+		//	There has to be a better way to do this...//
+		//============================================//
+
+		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == Items.AIR) && this.isTamed() && !this.isChild() && item == RCItems.LEATHER_HORN_ARMOR.get()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(RCItems.LEATHER_HORN_ARMOR.get()));
+			world.playMovingSound(player, this, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			this.setHasHornArmor(true);
+			return ActionResultType.CONSUME;
+		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == Items.AIR) && this.isTamed() && !this.isChild() && item == RCItems.GOLDEN_HORN_ARMOR.get()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(RCItems.GOLDEN_HORN_ARMOR.get()));
+			world.playMovingSound(player, this, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			this.setHasHornArmor(true);
+			return ActionResultType.CONSUME;
+		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == Items.AIR) && this.isTamed() && !this.isChild() && item == RCItems.IRON_HORN_ARMOR.get()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(RCItems.IRON_HORN_ARMOR.get()));
+			world.playMovingSound(player, this, SoundEvents.ITEM_ARMOR_EQUIP_IRON, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			this.setHasHornArmor(true);
+			return ActionResultType.CONSUME;
 		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == Items.AIR) && this.isTamed() && !this.isChild() && item == RCItems.DIAMOND_HORN_ARMOR.get()) {
 			if (!player.abilities.isCreativeMode) {
 				itemstack.shrink(1);
@@ -547,6 +577,17 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			world.playMovingSound(player, this, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.AMBIENT, 0.5F, 1.0F);
 			this.setHasHornArmor(true);
 			return ActionResultType.CONSUME;
+		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == Items.AIR) && this.isTamed() && !this.isChild() && item == RCItems.NETHERITE_HORN_ARMOR.get()) {
+			if (!player.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+			setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(RCItems.NETHERITE_HORN_ARMOR.get()));
+			world.playMovingSound(player, this, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, SoundCategory.AMBIENT, 0.5F, 1.0F);
+			this.setHasHornArmor(true);
+			return ActionResultType.CONSUME;
+
+		// End of horn armor
+
 		} else if (this.isSaddled() && item == Items.AIR) {
 			player.startRiding(this);
 			return ActionResultType.SUCCESS;
@@ -584,9 +625,11 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		super.travel(travelVec);		
 	}
 
+/*
 	public boolean isHornArmor(ItemStack stack) {
 		return stack.getItem() instanceof RavagerHornArmorItem;
 	}
+*/
 
 	@Override
 	public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {

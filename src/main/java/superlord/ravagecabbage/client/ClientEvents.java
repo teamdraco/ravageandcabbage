@@ -14,7 +14,9 @@ import superlord.ravagecabbage.client.render.CabbageRenderer;
 import superlord.ravagecabbage.client.render.CabbagerRenderer;
 import superlord.ravagecabbage.client.render.RCRavagerRenderer;
 import superlord.ravagecabbage.init.RCEntities;
+import superlord.ravagecabbage.init.RCItems;
 import superlord.ravagecabbage.init.RCKeybinds;
+import superlord.ravagecabbage.items.DyeableRavagerHornArmorItem;
 import superlord.ravagecabbage.items.RavageAndCabbageSpawnEggItem;
 
 @OnlyIn(Dist.CLIENT)
@@ -35,6 +37,8 @@ public class ClientEvents {
     public static void itemColors(ColorHandlerEvent.Item event) {
         ItemColors handler = event.getItemColors();
         IItemColor eggColor = (stack, tintIndex) -> ((RavageAndCabbageSpawnEggItem) stack.getItem()).getColor(tintIndex);
+        IItemColor armorColor = (stack, tintIndex) -> ((DyeableRavagerHornArmorItem) stack.getItem()).getColor(stack);
         for (RavageAndCabbageSpawnEggItem e : RavageAndCabbageSpawnEggItem.UNADDED_EGGS) handler.register(eggColor, e);
+        handler.register(armorColor, RCItems.LEATHER_HORN_ARMOR.get());
     }
 }
