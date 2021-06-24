@@ -583,6 +583,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 				this.entityDropItem(itemStack.copy());
 				this.setItemStackToSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
 			}
+			return ActionResultType.CONSUME;
 
 		} else if (this.isSaddled() && item == Items.AIR) {
 			player.startRiding(this);
