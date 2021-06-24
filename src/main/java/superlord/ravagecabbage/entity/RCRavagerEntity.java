@@ -84,7 +84,6 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		return p_213685_0_.isAlive() && !(p_213685_0_ instanceof RCRavagerEntity);
 	};
 	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> HORN_ARMOR = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(RCRavagerEntity.class, DataSerializers.VARINT);
 	public int attackTick;
 	private int stunTick;
@@ -123,11 +122,8 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 	}
 
 	public boolean hasHornArmor() {
-		return this.dataManager.get(HORN_ARMOR);
-	}
-
-	public void setHasHornArmor(boolean hasHornArmor) {
-		this.dataManager.set(HORN_ARMOR, hasHornArmor);
+		ItemStack itemStackHeadSlot = this.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		return (itemStackHeadSlot != null && !itemStackHeadSlot.isEmpty() && itemStackHeadSlot.getItem() instanceof IRavagerHornArmorItem);
 	}
 
 	@Override
@@ -135,7 +131,6 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		super.registerData();
 		this.dataManager.register(BOOST_TIME, 0);
 		this.dataManager.register(SADDLED, false);
-		this.dataManager.register(HORN_ARMOR, false);
 	}
 
 	@Override
@@ -245,7 +240,6 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 		if(hasHornArmor) {
 			this.setItemStackToSlot(EquipmentSlotType.HEAD, ItemStack.read(compoundNBT));
 		}
-		this.setHasHornArmor(hasHornArmor);
 	}
 
 	@Override
@@ -522,9 +516,8 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			Item item = itemStack.getItem();
 			if(item instanceof IRavagerHornArmorItem) {
 				IRavagerHornArmorItem hornArmor = (IRavagerHornArmorItem)item;
-
-				// and update this Entity's Atttributes.ARMOR base
 				this.getAttribute(Attributes.ARMOR).setBaseValue((double) hornArmor.getArmorValue());
+				// Update this Entity's Atttributes.ARMOR base
 			}
 		}
 	}
@@ -569,7 +562,7 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			return ActionResultType.CONSUME;
 
 
-		} else if ((!this.hasHornArmor() || this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty()) && this.isTamed() && !this.isChild() && item instanceof IRavagerHornArmorItem) {
+		} else if (!this.hasHornArmor() && this.isTamed() && !this.isChild() && item instanceof IRavagerHornArmorItem) {
 
 			this.setItemStackToSlot(EquipmentSlotType.HEAD, itemstack.copy());
 			if (!player.abilities.isCreativeMode) {
@@ -580,6 +573,17 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 			world.playMovingSound(player, this, hornArmorItem.getArmorMaterial().getSoundEvent(), SoundCategory.AMBIENT, 0.5F, 1.0F);
 
 			return ActionResultType.CONSUME;
+		} else if (player.isSecondaryUseActive() && this.hasHornArmor() && this.isTamed() && !this.isChild() && itemstack.isEmpty()) {
+
+			// Drop active HornArmorItem when Player is sneaking & has empty hand
+			// Later we can remove this when this Entity has its own INamedContainerProvider like a Horse
+			// so HornArmorItems can be set via drag'n drop
+			ItemStack itemStack = this.getItemStackFromSlot(EquipmentSlotType.HEAD);
+			if(!itemStack.isEmpty()) {
+				this.entityDropItem(itemStack.copy());
+				this.setItemStackToSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
+			}
+
 		} else if (this.isSaddled() && item == Items.AIR) {
 			player.startRiding(this);
 			return ActionResultType.SUCCESS;
