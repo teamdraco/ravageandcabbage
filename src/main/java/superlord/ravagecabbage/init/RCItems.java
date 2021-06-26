@@ -1,5 +1,6 @@
 package superlord.ravagecabbage.init;
 
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -18,10 +19,10 @@ public class RCItems {
     public static final RegistryObject<Item> RAVAGER_MILK = REGISTER.register("ravager_milk", () -> new RavagerMilkItem(new Item.Properties().group(RavageAndCabbage.GROUP).maxStackSize(1)));
     public static final RegistryObject<Item> CABBAGE_THROWABLE = REGISTER.register("throwable_cabbage", () -> new ThrowableCabbageItem(new Item.Properties().maxStackSize(1)));
     public static final RegistryObject<Item> LEATHER_HORN_ARMOR = REGISTER.register("leather_horn_armor", () -> new DyeableRavagerHornArmorItem(1, "leather", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(45)));
-    public static final RegistryObject<Item> GOLDEN_HORN_ARMOR = REGISTER.register("golden_horn_armor", () -> new RavagerHornArmorItem(3, "golden", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(50)));
-    public static final RegistryObject<Item> IRON_HORN_ARMOR = REGISTER.register("iron_horn_armor", () -> new RavagerHornArmorItem(2, "iron", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(75)));
-    public static final RegistryObject<Item> DIAMOND_HORN_ARMOR = REGISTER.register("diamond_horn_armor", () -> new RavagerHornArmorItem(5, "diamond", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(100)));
-    public static final RegistryObject<Item> NETHERITE_HORN_ARMOR = REGISTER.register("netherite_horn_armor", () -> new RavagerHornArmorItem(8, "netherite", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(150)));
+    public static final RegistryObject<Item> GOLDEN_HORN_ARMOR = REGISTER.register("golden_horn_armor", () -> new RavagerHornArmorItem(3, "golden", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(50), ArmorMaterial.GOLD));
+    public static final RegistryObject<Item> IRON_HORN_ARMOR = REGISTER.register("iron_horn_armor", () -> new RavagerHornArmorItem(2, "iron", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(75), ArmorMaterial.IRON));
+    public static final RegistryObject<Item> DIAMOND_HORN_ARMOR = REGISTER.register("diamond_horn_armor", () -> new RavagerHornArmorItem(5, "diamond", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(100), ArmorMaterial.DIAMOND));
+    public static final RegistryObject<Item> NETHERITE_HORN_ARMOR = REGISTER.register("netherite_horn_armor", () -> new RavagerHornArmorItem(8, "netherite", new Item.Properties().group(RavageAndCabbage.GROUP).maxDamage(150).isImmuneToFire(), ArmorMaterial.NETHERITE));
 
     // Spawn Eggs
     public static final RegistryObject<Item> CABBAGER_SPAWN_EGG = REGISTER.register("cabbager_spawn_egg", () -> new RavageAndCabbageSpawnEggItem(RCEntities.CABBAGER, 0x959B9B, 0x708438, new Item.Properties().group(RavageAndCabbage.GROUP)));
