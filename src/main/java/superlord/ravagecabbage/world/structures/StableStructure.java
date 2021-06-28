@@ -3,6 +3,7 @@ package superlord.ravagecabbage.world.structures;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.block.Blocks;
@@ -25,16 +26,14 @@ import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.*;
-import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.gen.feature.template.*;
 import superlord.ravagecabbage.RavageAndCabbage;
 import superlord.ravagecabbage.entity.CabbagerEntity;
 import superlord.ravagecabbage.entity.RCRavagerEntity;
@@ -44,9 +43,16 @@ import superlord.ravagecabbage.init.RCStructures;
 
 public class StableStructure extends Structure<NoFeatureConfig> {
 
+	private static final List<MobSpawnInfo.Spawners> STABLE_ENEMIES = ImmutableList.of(new MobSpawnInfo.Spawners(RCEntities.CABBAGER.get(), 1, 1, 1));
+	
 	public StableStructure(Codec<NoFeatureConfig> p_i51440_1_) {
         super(p_i51440_1_);
     }
+	
+	@Override
+	public List<MobSpawnInfo.Spawners> getDefaultSpawnList() {
+		return STABLE_ENEMIES;
+	}
 
     public String getStructureName() {
         return RavageAndCabbage.MOD_ID + ":stable";
