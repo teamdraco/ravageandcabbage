@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "ravageandcabbage:diamond_horn_armor"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "ravageandcabbage:diamond_horn_armor"
+  }
+}
