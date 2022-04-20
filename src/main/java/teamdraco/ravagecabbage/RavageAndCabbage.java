@@ -19,7 +19,6 @@ import teamdraco.ravagecabbage.network.RCNetwork;
 
 @Mod(RavageAndCabbage.MOD_ID)
 public class RavageAndCabbage {
-	
     public static final String MOD_ID = "ravageandcabbage";
     public static final Logger LOGGER = LogManager.getLogger();
 

@@ -44,7 +44,7 @@ public class ClientEvents {
         event.registerEntityRenderer(RCEntities.RAVAGER.get(), RCRavagerRenderer::new);
     }
 
-        @SubscribeEvent
+    @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void itemColors(ColorHandlerEvent.Item event) {
         ItemColors handler = event.getItemColors();
@@ -52,7 +52,7 @@ public class ClientEvents {
         handler.register(armorColor, RCItems.LEATHER_HORN_ARMOR.get());
     }
 
-    @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class ForgeBusEvents {
 
         @SubscribeEvent

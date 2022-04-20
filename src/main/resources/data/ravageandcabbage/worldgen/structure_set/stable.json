@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "ravageandcabbage:stable",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 5932485984,
+
+    "spacing": 60,
+
+    "separation": 35,
+
+    "type": "minecraft:random_spread"
+  }
+}

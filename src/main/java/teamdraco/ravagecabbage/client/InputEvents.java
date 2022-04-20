@@ -10,7 +10,7 @@ import teamdraco.ravagecabbage.registry.RCKeybinds;
 import teamdraco.ravagecabbage.network.RCNetwork;
 import teamdraco.ravagecabbage.network.KeyInputMessage;
 
-@Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class InputEvents {
 
     @SubscribeEvent

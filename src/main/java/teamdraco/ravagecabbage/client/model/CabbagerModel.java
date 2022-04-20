@@ -12,7 +12,7 @@ public class CabbagerModel extends AnimatedGeoModel<CabbagerEntity> {
 
     @Override
     public ResourceLocation getModelLocation(CabbagerEntity entity) {
-        return new ResourceLocation(RavageAndCabbage.MOD_ID, "geo/entity/cabbager.geo.json");
+        return new ResourceLocation(RavageAndCabbage.MOD_ID, "geo/cabbager.geo.json");
     }
 
     @Override
@@ -22,21 +22,16 @@ public class CabbagerModel extends AnimatedGeoModel<CabbagerEntity> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(CabbagerEntity entity) {
-        return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/entity/cabbager.animations.json");
+        return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/cabbager.animations.json");
     }
 
     @Override
     public void setLivingAnimations(CabbagerEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        IBone body = this.getAnimationProcessor().getBone("body");
+        IBone head = this.getAnimationProcessor().getBone("field_191217_a");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
 
-        if (!entity.isInWater()) {
-            body.setRotationZ(1.5708f);
-        }
-        else {
-            body.setRotationX(extraData.netHeadYaw * (float)Math.PI / 180F);
-            body.setRotationY(extraData.headPitch * (float)Math.PI / 180F);
-        }
+        head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
     }
 }
