@@ -50,4 +50,6 @@ public class RavageAndCabbage {
             return new ItemStack(RCItems.CABBAGE.get());
         }
     };
+
+    // todo - add loot to the empty chest in the stable
 }
