@@ -1,4 +1,4 @@
-package teamdraco.ravagecabbage.common.entity;
+package teamdraco.ravagecabbage.common.entities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

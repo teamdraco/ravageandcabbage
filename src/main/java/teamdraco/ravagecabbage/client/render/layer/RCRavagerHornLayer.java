@@ -1,7 +1,6 @@
 package teamdraco.ravagecabbage.client.render.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -11,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import teamdraco.ravagecabbage.RavageAndCabbage;
-import teamdraco.ravagecabbage.common.entity.RCRavagerEntity;
+import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 import teamdraco.ravagecabbage.common.items.DyeableRavagerHornArmorItem;
 import teamdraco.ravagecabbage.common.items.RavagerHornArmorItem;
 

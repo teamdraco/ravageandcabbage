@@ -10,8 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
-import teamdraco.ravagecabbage.RavageAndCabbage;
-import teamdraco.ravagecabbage.common.entity.RCRavagerEntity;
+import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class RCSaddleLayer<T extends RCRavagerEntity> extends GeoLayerRenderer<T> {

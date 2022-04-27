@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import teamdraco.ravagecabbage.RavageAndCabbage;
-import teamdraco.ravagecabbage.common.entity.CabbagerEntity;
+import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
 import teamdraco.ravagecabbage.registry.RCItems;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Bus.FORGE)

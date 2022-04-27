@@ -7,7 +7,7 @@ import teamdraco.ravagecabbage.RavageAndCabbage;
 import teamdraco.ravagecabbage.client.model.RCRavagerModel;
 import teamdraco.ravagecabbage.client.render.layer.RCRavagerHornLayer;
 import teamdraco.ravagecabbage.client.render.layer.RCSaddleLayer;
-import teamdraco.ravagecabbage.common.entity.RCRavagerEntity;
+import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 
 public class RCRavagerRenderer extends GeoEntityRenderer<RCRavagerEntity> {
     private static final ResourceLocation SADDLE_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_equipment/saddle.png");

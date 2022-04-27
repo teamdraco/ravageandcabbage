@@ -1,4 +1,4 @@
-package teamdraco.ravagecabbage.common.entity.item;
+package teamdraco.ravagecabbage.common.entities.item;
 
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.damagesource.DamageSource;

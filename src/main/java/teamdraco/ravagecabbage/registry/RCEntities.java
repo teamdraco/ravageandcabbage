@@ -7,9 +7,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import teamdraco.ravagecabbage.RavageAndCabbage;
-import teamdraco.ravagecabbage.common.entity.CabbagerEntity;
-import teamdraco.ravagecabbage.common.entity.RCRavagerEntity;
-import teamdraco.ravagecabbage.common.entity.item.CabbageItemEntity;
+import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
+import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
+import teamdraco.ravagecabbage.common.entities.item.CabbageItemEntity;
 
 public class RCEntities {
 	

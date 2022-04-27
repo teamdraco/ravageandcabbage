@@ -1,4 +1,4 @@
-package teamdraco.ravagecabbage.common.entity;
+package teamdraco.ravagecabbage.common.entities;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -36,7 +36,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-import teamdraco.ravagecabbage.common.entity.item.CabbageItemEntity;
+import teamdraco.ravagecabbage.common.entities.item.CabbageItemEntity;
 import teamdraco.ravagecabbage.registry.RCItems;
 
 import javax.annotation.Nullable;

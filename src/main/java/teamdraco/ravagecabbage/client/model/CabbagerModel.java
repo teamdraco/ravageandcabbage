@@ -6,7 +6,7 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import teamdraco.ravagecabbage.RavageAndCabbage;
-import teamdraco.ravagecabbage.common.entity.CabbagerEntity;
+import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
 
 public class CabbagerModel extends AnimatedGeoModel<CabbagerEntity> {
 
