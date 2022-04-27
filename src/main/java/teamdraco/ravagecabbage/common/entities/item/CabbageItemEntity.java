@@ -46,7 +46,7 @@ public class CabbageItemEntity extends ThrowableItemProjectile {
    }
 
    protected void onHitBlock(BlockHitResult result) {
-      super.onHit(result);
+      super.onHitBlock(result);
       if (!this.level.isClientSide) {
          this.level.broadcastEntityEvent(this, (byte)3);
          this.discard();

@@ -23,7 +23,7 @@ public class RCRavagerModel extends AnimatedGeoModel<RCRavagerEntity> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(RCRavagerEntity entity) {
-        return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/ravager.animations.json");
+        return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/ravager.animation.json");
     }
 
     @Override

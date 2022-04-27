@@ -22,7 +22,7 @@ public class CabbagerModel extends AnimatedGeoModel<CabbagerEntity> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(CabbagerEntity entity) {
-        return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/cabbager.animations.json");
+        return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/cabbager.animation.json");
     }
 
     @Override

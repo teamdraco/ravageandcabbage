@@ -1,10 +1,10 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.CabbagerModel.idle": {
+		"animation.cabbager.idle": {
 			"loop": true
 		},
-		"animation.CabbagerModel.walk": {
+		"animation.cabbager.walk": {
 			"loop": true,
 			"bones": {
 				"field_217143_g": {
