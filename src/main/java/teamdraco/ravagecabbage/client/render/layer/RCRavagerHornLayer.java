@@ -15,7 +15,8 @@ import teamdraco.ravagecabbage.common.items.DyeableRavagerHornArmorItem;
 import teamdraco.ravagecabbage.common.items.RavagerHornArmorItem;
 
 public class RCRavagerHornLayer extends GeoLayerRenderer<RCRavagerEntity> {
-    private static final ResourceLocation MODEL = new ResourceLocation(RavageAndCabbage.MOD_ID, "geo/ravager.geo.json");
+    @SuppressWarnings("unused")
+	private static final ResourceLocation MODEL = new ResourceLocation(RavageAndCabbage.MOD_ID, "geo/ravager.geo.json");
 
     public RCRavagerHornLayer(IGeoRenderer<RCRavagerEntity> entityRendererIn) {
         super(entityRendererIn);

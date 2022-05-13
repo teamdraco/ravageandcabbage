@@ -1,5 +1,9 @@
 package teamdraco.ravagecabbage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -7,15 +11,13 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
 import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
+import teamdraco.ravagecabbage.network.RCNetwork;
 import teamdraco.ravagecabbage.registry.RCBlocks;
 import teamdraco.ravagecabbage.registry.RCEntities;
 import teamdraco.ravagecabbage.registry.RCItems;
-import teamdraco.ravagecabbage.network.RCNetwork;
 
 @Mod(RavageAndCabbage.MOD_ID)
 public class RavageAndCabbage {
@@ -27,6 +29,7 @@ public class RavageAndCabbage {
 
         bus.addListener(this::registerCommon);
         bus.addListener(this::registerEntityAttributes);
+        bus.addListener(this::addRaider);
 
         RCEntities.REGISTER.register(bus);
         RCItems.REGISTER.register(bus);
@@ -37,6 +40,12 @@ public class RavageAndCabbage {
 
     private void registerCommon(final FMLCommonSetupEvent event) {
         RCNetwork.init();
+    }
+    
+    private void addRaider(FMLCommonSetupEvent event) {
+    	event.enqueueWork(() -> {
+    		Raid.RaiderType.create("cabbager", RCEntities.CABBAGER.get(), new int[] {0, 1, 2, 2, 1, 2, 2, 3 });
+    	});
     }
 
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {

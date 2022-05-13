@@ -1,6 +1,5 @@
 package teamdraco.ravagecabbage.common.items;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 
 public class DyeableRavagerHornArmorItem extends RavagerHornArmorItem implements DyeableLeatherItem {

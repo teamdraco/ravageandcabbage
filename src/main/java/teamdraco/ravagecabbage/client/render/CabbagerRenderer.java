@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import teamdraco.ravagecabbage.client.model.CabbagerModel;
 import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
-import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 
 public class CabbagerRenderer extends GeoEntityRenderer<CabbagerEntity> {
 

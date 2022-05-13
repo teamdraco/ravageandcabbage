@@ -26,7 +26,8 @@ public class RCRavagerModel extends AnimatedGeoModel<RCRavagerEntity> {
         return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/ravager.animation.json");
     }
 
-    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     public void setLivingAnimations(RCRavagerEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone neck = this.getAnimationProcessor().getBone("neck");

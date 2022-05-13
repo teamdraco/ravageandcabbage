@@ -25,7 +25,8 @@ public class CabbagerModel extends AnimatedGeoModel<CabbagerEntity> {
         return new ResourceLocation(RavageAndCabbage.MOD_ID, "animations/cabbager.animation.json");
     }
 
-    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     public void setLivingAnimations(CabbagerEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("field_191217_a");
