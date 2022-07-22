@@ -3,10 +3,12 @@ package teamdraco.ravagecabbage.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -16,18 +18,25 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import teamdraco.ravagecabbage.RavageAndCabbage;
+import teamdraco.ravagecabbage.client.model.CabbagerModel;
+import teamdraco.ravagecabbage.client.model.RCRavagerModel;
 import teamdraco.ravagecabbage.client.render.CabbagerRenderer;
 import teamdraco.ravagecabbage.client.render.RCRavagerRenderer;
+import teamdraco.ravagecabbage.common.items.DyeableRavagerHornArmorItem;
+import teamdraco.ravagecabbage.network.KeyInputMessage;
+import teamdraco.ravagecabbage.network.RCNetwork;
 import teamdraco.ravagecabbage.registry.RCBlocks;
 import teamdraco.ravagecabbage.registry.RCEntities;
 import teamdraco.ravagecabbage.registry.RCItems;
 import teamdraco.ravagecabbage.registry.RCKeybinds;
-import teamdraco.ravagecabbage.common.items.DyeableRavagerHornArmorItem;
-import teamdraco.ravagecabbage.network.RCNetwork;
-import teamdraco.ravagecabbage.network.KeyInputMessage;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
+
+	public static ModelLayerLocation CABBAGER = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "cabbager"), "cabbager");
+	public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager"), "ravager");
+	public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager_saddle"), "ravager_saddle");
+	public static ModelLayerLocation RAVAGER_HORNS = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager_horns"), "ravager_horns");
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
@@ -42,6 +51,14 @@ public class ClientEvents {
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(RCEntities.CABBAGER.get(), CabbagerRenderer::new);
         event.registerEntityRenderer(RCEntities.RAVAGER.get(), RCRavagerRenderer::new);
+    }
+    
+    @SubscribeEvent
+	public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    	event.registerLayerDefinition(CABBAGER, CabbagerModel::createBodyLayer);
+    	event.registerLayerDefinition(RAVAGER, RCRavagerModel::createBodyLayer);
+    	event.registerLayerDefinition(RAVAGER_SADDLE, RCRavagerModel::createBodyLayer);
+    	event.registerLayerDefinition(RAVAGER_HORNS, RCRavagerModel::createBodyLayer);
     }
 
     @SubscribeEvent

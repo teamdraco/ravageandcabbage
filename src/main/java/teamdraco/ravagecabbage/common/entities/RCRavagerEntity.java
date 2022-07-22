@@ -51,13 +51,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.IAnimationTickable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 import teamdraco.ravagecabbage.common.items.IRavagerHornArmorItem;
 import teamdraco.ravagecabbage.registry.RCEntities;
 import teamdraco.ravagecabbage.registry.RCItems;
@@ -69,12 +62,11 @@ import java.util.function.Predicate;
 
 import static net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent;
 
-public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Saddleable, IAnimatable, IAnimationTickable {
+public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Saddleable {
 	private static final Predicate<Entity> NO_RAVAGER_AND_ALIVE = (p_213685_0_) -> p_213685_0_.isAlive() && !(p_213685_0_ instanceof RCRavagerEntity);
 	private static final EntityDataAccessor<Boolean> SADDLED = SynchedEntityData.defineId(RCRavagerEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> BOOST_TIME = SynchedEntityData.defineId(RCRavagerEntity.class, EntityDataSerializers.INT);
 	private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, BOOST_TIME, SADDLED);
-	private final AnimationFactory factory = new AnimationFactory(this);
 	private int stunTick;
 	private int roarTick;
 	public int attackTick;
@@ -582,7 +574,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 
 	@Override
 	public boolean isSaddleable() {
-		return this.isAlive() && !this.isBaby();
+		return this.isAlive() && !this.isBaby() && this.isTame();
 	}
 
 	@Override
@@ -609,31 +601,6 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 		} else {
 			return false;
 		}
-	}
-
-	@Override
-	public AnimationFactory getFactory() {
-		return factory;
-	}
-
-	@Override
-	public int tickTimer() {
-		return tickCount;
-	}
-
-	@Override
-	public void registerControllers(AnimationData data) {
-		data.addAnimationController(new AnimationController<>(this, "controller", 5, this::predicate));
-	}
-
-	private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-		//if (event.isMoving()) {
-		//	event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.ravager.walk"));
-		//}
-		//else {
-		//	event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.ravager.idle"));
-		//}
-		return PlayState.CONTINUE;
 	}
 
 	class AttackGoal extends MeleeAttackGoal {

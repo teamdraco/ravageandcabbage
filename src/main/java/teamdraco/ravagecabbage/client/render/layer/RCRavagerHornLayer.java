@@ -1,37 +1,41 @@
 package teamdraco.ravagecabbage.client.render.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
-import teamdraco.ravagecabbage.RavageAndCabbage;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import teamdraco.ravagecabbage.client.model.RCRavagerModel;
 import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 import teamdraco.ravagecabbage.common.items.DyeableRavagerHornArmorItem;
 import teamdraco.ravagecabbage.common.items.RavagerHornArmorItem;
 
-public class RCRavagerHornLayer extends GeoLayerRenderer<RCRavagerEntity> {
-    @SuppressWarnings("unused")
-	private static final ResourceLocation MODEL = new ResourceLocation(RavageAndCabbage.MOD_ID, "geo/ravager.geo.json");
+@OnlyIn(Dist.CLIENT)
+public class RCRavagerHornLayer<T extends RCRavagerEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+    private RCRavagerModel model;
 
-    public RCRavagerHornLayer(IGeoRenderer<RCRavagerEntity> entityRendererIn) {
+    public RCRavagerHornLayer(RenderLayerParent<T, M> entityRendererIn, RCRavagerModel model) {
         super(entityRendererIn);
+        this.model = model;
     }
 
-    @Override
-    public RenderType getRenderType(ResourceLocation textureLocation) {
-        return super.getRenderType(textureLocation);
-    }
-
-    @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, RCRavagerEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    @SuppressWarnings("unchecked")
+	@Override
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemStack itemstack = entity.getItemBySlot(EquipmentSlot.HEAD);
         if (itemstack.getItem() instanceof RavagerHornArmorItem) {
             RavagerHornArmorItem armor = (RavagerHornArmorItem)itemstack.getItem();
+            this.getParentModel().copyPropertiesTo((EntityModel<T>) this.model);
+            this.model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
+            this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             float f;
             float f1;
             float f2;
@@ -46,8 +50,8 @@ public class RCRavagerHornLayer extends GeoLayerRenderer<RCRavagerEntity> {
                 f2 = 1.0F;
             }
 
-            this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entity)), entity, partialTicks, RenderType.entityCutoutNoCull(armor.getArmorTexture()), matrixStackIn, bufferIn,
-                    bufferIn.getBuffer(RenderType.entityCutoutNoCull(armor.getArmorTexture())), packedLightIn, OverlayTexture.NO_OVERLAY, f, f1, f2, 1.0f);
+            VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(armor.getArmorTexture()));
+            this.model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, f, f1, f2, 1.0F);
         }
     }
 }

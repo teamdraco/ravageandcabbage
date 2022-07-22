@@ -1,31 +1,38 @@
 package teamdraco.ravagecabbage.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.SaddleLayer;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import teamdraco.ravagecabbage.RavageAndCabbage;
+import teamdraco.ravagecabbage.client.ClientEvents;
 import teamdraco.ravagecabbage.client.model.RCRavagerModel;
 import teamdraco.ravagecabbage.client.render.layer.RCRavagerHornLayer;
-import teamdraco.ravagecabbage.client.render.layer.RCSaddleLayer;
 import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 
-public class RCRavagerRenderer extends GeoEntityRenderer<RCRavagerEntity> {
-    private static final ResourceLocation SADDLE_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_equipment/saddle.png");
+@SuppressWarnings("rawtypes")
+public class RCRavagerRenderer extends MobRenderer<RCRavagerEntity, EntityModel<RCRavagerEntity>> {
 
-    public RCRavagerRenderer(EntityRendererProvider.Context context) {
-        super(context, new RCRavagerModel());
-        this.addLayer(new RCSaddleLayer<>(this, SADDLE_TEXTURE));
-        this.addLayer(new RCRavagerHornLayer(this));
-        this.shadowRadius = 1.1F;
-    }
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/tamed_ravager.png");
+	private static final ResourceLocation SADDLE_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_equipment/saddle.png");
+    private static final ResourceLocation BABY_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_baby.png");
 
-    @Override
-    public RenderType getRenderType(RCRavagerEntity animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(textureLocation);
-    }
+	@SuppressWarnings({ "unchecked" })
+	public RCRavagerRenderer(EntityRendererProvider.Context context) {
+		super(context, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER)), 1.1F);
+		this.addLayer(new SaddleLayer(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_SADDLE)), SADDLE_TEXTURE));
+		this.addLayer(new RCRavagerHornLayer(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_HORNS))));
+	}
+
+	@Override
+	public ResourceLocation getTextureLocation(RCRavagerEntity entity) {
+		 if (entity.isBaby()) {
+	            return BABY_TEXTURE;
+	        }
+	        else {
+	        	return TEXTURE;
+	        }
+	}
+
 }

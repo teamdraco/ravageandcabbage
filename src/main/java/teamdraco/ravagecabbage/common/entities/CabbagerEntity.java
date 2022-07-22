@@ -1,5 +1,7 @@
 package teamdraco.ravagecabbage.common.entities;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvent;
@@ -7,10 +9,20 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PathfindToRaidGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -29,21 +41,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.IAnimationTickable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 import teamdraco.ravagecabbage.common.entities.item.CabbageItemEntity;
 import teamdraco.ravagecabbage.registry.RCItems;
 
-import javax.annotation.Nullable;
-
-public class CabbagerEntity extends AbstractIllager implements RangedAttackMob, IAnimatable, IAnimationTickable {
-	private final AnimationFactory factory = new AnimationFactory(this);
+public class CabbagerEntity extends AbstractIllager implements RangedAttackMob {
 	private final SimpleContainer inventory = new SimpleContainer(5);
 
 	public CabbagerEntity(EntityType<? extends CabbagerEntity> type, Level worldIn) {
@@ -176,28 +177,4 @@ public class CabbagerEntity extends AbstractIllager implements RangedAttackMob, 
         return new ItemStack(RCItems.CABBAGER_SPAWN_EGG.get());
     }
 
-	@Override
-	public AnimationFactory getFactory() {
-		return factory;
-	}
-
-	@Override
-	public int tickTimer() {
-		return tickCount;
-	}
-
-	@Override
-	public void registerControllers(AnimationData data) {
-		data.addAnimationController(new AnimationController<>(this, "controller", 5, this::predicate));
-	}
-
-	private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-		if (event.isMoving()) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.cabbager.walk"));
-		}
-		else {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.cabbager.idle"));
-		}
-		return PlayState.CONTINUE;
-	}
 }

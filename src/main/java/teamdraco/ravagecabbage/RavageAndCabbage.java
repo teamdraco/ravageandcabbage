@@ -11,7 +11,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import software.bernie.geckolib3.GeckoLib;
 import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
 import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 import teamdraco.ravagecabbage.network.RCNetwork;
@@ -21,44 +20,42 @@ import teamdraco.ravagecabbage.registry.RCItems;
 
 @Mod(RavageAndCabbage.MOD_ID)
 public class RavageAndCabbage {
-    public static final String MOD_ID = "ravageandcabbage";
-    public static final Logger LOGGER = LogManager.getLogger();
+	public static final String MOD_ID = "ravageandcabbage";
+	public static final Logger LOGGER = LogManager.getLogger();
 
-    public RavageAndCabbage() {
-    	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+	public RavageAndCabbage() {
+		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        bus.addListener(this::registerCommon);
-        bus.addListener(this::registerEntityAttributes);
-        bus.addListener(this::addRaider);
+		bus.addListener(this::registerCommon);
+		bus.addListener(this::registerEntityAttributes);
+		bus.addListener(this::addRaider);
 
-        RCEntities.REGISTER.register(bus);
-        RCItems.REGISTER.register(bus);
-        RCBlocks.REGISTER.register(bus);
+		RCEntities.REGISTER.register(bus);
+		RCItems.REGISTER.register(bus);
+		RCBlocks.REGISTER.register(bus);
+	}
 
-        GeckoLib.initialize();
-    }
+	private void registerCommon(final FMLCommonSetupEvent event) {
+		RCNetwork.init();
+	}
 
-    private void registerCommon(final FMLCommonSetupEvent event) {
-        RCNetwork.init();
-    }
-    
-    private void addRaider(FMLCommonSetupEvent event) {
-    	event.enqueueWork(() -> {
-    		Raid.RaiderType.create("cabbager", RCEntities.CABBAGER.get(), new int[] {0, 1, 2, 2, 1, 2, 2, 3 });
-    	});
-    }
+	private void addRaider(FMLCommonSetupEvent event) {
+		event.enqueueWork(() -> {
+			Raid.RaiderType.create("cabbager", RCEntities.CABBAGER.get(), new int[] {0, 1, 2, 2, 1, 2, 2, 3 });
+		});
+	}
 
-    private void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(RCEntities.CABBAGER.get(), CabbagerEntity.createAttributes().build());
-        event.put(RCEntities.RAVAGER.get(), RCRavagerEntity.createAttributes().build());
-    }
+	private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+		event.put(RCEntities.CABBAGER.get(), CabbagerEntity.createAttributes().build());
+		event.put(RCEntities.RAVAGER.get(), RCRavagerEntity.createAttributes().build());
+	}
 
-    public final static CreativeModeTab GROUP = new CreativeModeTab(MOD_ID) {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(RCItems.CABBAGE.get());
-        }
-    };
+	public final static CreativeModeTab GROUP = new CreativeModeTab(MOD_ID) {
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(RCItems.CABBAGE.get());
+		}
+	};
 
-    // todo - add loot to the empty chest in the stable
+	// todo - add loot to the empty chest in the stable
 }
