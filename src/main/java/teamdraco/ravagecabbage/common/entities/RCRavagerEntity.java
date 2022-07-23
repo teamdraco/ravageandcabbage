@@ -71,6 +71,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 	private int roarTick;
 	public int attackTick;
 
+	@SuppressWarnings("deprecation")
 	public RCRavagerEntity(EntityType<? extends RCRavagerEntity> p_i50250_1_, Level p_i50250_2_) {
 		super(p_i50250_1_, p_i50250_2_);
 		this.maxUpStep = 1.0F;
@@ -355,6 +356,10 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 		}
 	}
 
+	protected boolean isImmobile() {
+		return super.isImmobile() || this.attackTick > 0 || this.stunTick > 0 || this.roarTick > 0;
+	}
+
 	@Override
 	public boolean hasLineOfSight(Entity entityIn) {
 		return this.stunTick <= 0 && this.roarTick <= 0 && super.hasLineOfSight(entityIn);
@@ -369,7 +374,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 				this.level.broadcastEntityEvent(this, (byte)39);
 				entityIn.push(this);
 			} else {
-				this.launch(entityIn);
+				this.strongKnockback(entityIn);
 			}
 
 			entityIn.hurtMarked = true;
@@ -384,7 +389,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 					entity.hurt(DamageSource.mobAttack(this), 6.0F);
 				}
 
-				this.launch(entity);
+				this.strongKnockback(entity);
 			}
 
 			Vec3 vec3d = this.getBoundingBox().getCenter();
@@ -408,11 +413,11 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 
 	}
 
-	private void launch(Entity p_213688_1_) {
-		double d0 = p_213688_1_.getX() - this.getX();
-		double d1 = p_213688_1_.getZ() - this.getZ();
+	private void strongKnockback(Entity p_33340_) {
+		double d0 = p_33340_.getX() - this.getX();
+		double d1 = p_33340_.getZ() - this.getZ();
 		double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
-		p_213688_1_.push(d0 / d2 * 4.0D, 0.2D, d1 / d2 * 4.0D);
+		p_33340_.push(d0 / d2 * 4.0D, 0.2D, d1 / d2 * 4.0D);
 	}
 
 	@Override
