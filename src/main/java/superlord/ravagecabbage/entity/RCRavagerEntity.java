@@ -512,11 +512,11 @@ public class RCRavagerEntity extends TameableEntity implements IRideable, IEquip
 	public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack itemStack) {
 		super.setItemStackToSlot(slotIn, itemStack);
 
-		if(slotIn == EquipmentSlotType.HEAD && itemStack != null && !itemStack.isEmpty()) {
+		if (slotIn == EquipmentSlotType.HEAD && itemStack != null && !itemStack.isEmpty()) {
 			Item item = itemStack.getItem();
-			if(item instanceof IRavagerHornArmorItem) {
+			if (item instanceof IRavagerHornArmorItem) {
 				IRavagerHornArmorItem hornArmor = (IRavagerHornArmorItem)item;
-				this.getAttribute(Attributes.ARMOR).setBaseValue((double) hornArmor.getArmorValue());
+				this.getAttribute(Attributes.ARMOR).setBaseValue(hornArmor.getArmorValue());
 				// Update this Entity's Atttributes.ARMOR base
 			}
 		}

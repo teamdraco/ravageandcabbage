@@ -10,6 +10,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fml.network.NetworkEvent;
 import superlord.ravagecabbage.entity.RCRavagerEntity;
+import superlord.ravagecabbage.items.RavagerHornArmorItem;
 
 import java.util.function.Supplier;
 
@@ -42,7 +43,7 @@ public class InputMessage {
                         ravager.playSound(SoundEvents.ENTITY_RAVAGER_ATTACK, 1.0F, 1.0F);
                         for (Entity entity : ravager.world.getEntitiesWithinAABB(LivingEntity.class, ravager.getBoundingBox().grow(4.0D))) {
                             if (!(entity instanceof RCRavagerEntity) && !(entity instanceof PlayerEntity)) {
-                                entity.attackEntityFrom(DamageSource.causeMobDamage(ravager), 4.0F);
+                                entity.attackEntityFrom(DamageSource.causeMobDamage(ravager), ((RavagerHornArmorItem) ravager.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem()).getArmorValue());
                                 ravager.getItemStackFromSlot(EquipmentSlotType.HEAD).damageItem(1, ravager, (p_213613_1_) -> {
                                     p_213613_1_.sendBreakAnimation(EquipmentSlotType.HEAD);
                                 });
