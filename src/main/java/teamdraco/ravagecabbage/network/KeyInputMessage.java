@@ -41,9 +41,7 @@ public class KeyInputMessage {
                         for (Entity entity : ravager.level.getEntitiesOfClass(LivingEntity.class, ravager.getBoundingBox().inflate(4.0D))) {
                             if (!(entity instanceof RCRavagerEntity) && !(entity instanceof Player)) {
                                 entity.hurt(DamageSource.mobAttack(ravager), 4.0F);
-                                ravager.getItemBySlot(EquipmentSlot.HEAD).hurtAndBreak(1, ravager, (p_213613_1_) -> {
-                                    p_213613_1_.broadcastBreakEvent(EquipmentSlot.HEAD);
-                                });
+                                ravager.getItemBySlot(EquipmentSlot.HEAD).hurtAndBreak(1, ravager, (p_213613_1_) -> p_213613_1_.broadcastBreakEvent(EquipmentSlot.HEAD));
                             }
                         }
                     }
