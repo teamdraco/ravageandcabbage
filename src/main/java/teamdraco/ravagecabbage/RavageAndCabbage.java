@@ -1,5 +1,6 @@
 package teamdraco.ravagecabbage;
 
+import net.minecraft.world.level.block.ComposterBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +29,7 @@ public class RavageAndCabbage {
 
 		bus.addListener(this::registerCommon);
 		bus.addListener(this::registerEntityAttributes);
-		bus.addListener(this::addRaider);
+		bus.addListener(this::setup);
 
 		RCEntities.REGISTER.register(bus);
 		RCItems.REGISTER.register(bus);
@@ -39,9 +40,11 @@ public class RavageAndCabbage {
 		RCNetwork.init();
 	}
 
-	private void addRaider(FMLCommonSetupEvent event) {
+	private void setup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			Raid.RaiderType.create("cabbager", RCEntities.CABBAGER.get(), new int[] {0, 1, 2, 2, 1, 2, 2, 3 });
+			ComposterBlock.COMPOSTABLES.put(RCItems.CABBAGE.get().asItem(), 0.65F);
+			ComposterBlock.COMPOSTABLES.put(RCItems.CABBAGE_SEEDS.get().asItem(), 0.3F);
 		});
 	}
 
