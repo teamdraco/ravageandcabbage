@@ -32,7 +32,6 @@ import teamdraco.ravagecabbage.registry.RCKeybinds;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
-
 	public static ModelLayerLocation CABBAGER = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "cabbager"), "cabbager");
 	public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager"), "ravager");
 	public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager_saddle"), "ravager_saddle");
@@ -43,7 +42,7 @@ public class ClientEvents {
         RCKeybinds.register(event);
 
         EntityRenderers.register(RCEntities.CABBAGE.get(), ThrownItemRenderer::new);
-
+        EntityRenderers.register(RCEntities.ILL_CABBAGE.get(), ThrownItemRenderer::new);
         ItemBlockRenderTypes.setRenderLayer(RCBlocks.CABBAGE_CROP.get(), RenderType.cutout());
     }
 

@@ -9,6 +9,7 @@
 	"item.ravageandcabbage.iron_horn_armor": "Iron Horn Armor",
 	"item.ravageandcabbage.diamond_horn_armor": "Diamond Horn Armor",
 	"item.ravageandcabbage.netherite_horn_armor": "Netherite Horn Armor",
+	"item.ravageandcabbage.ill_cabbage": "Ill Cabbage",
 
 	"item.ravageandcabbage.cabbager_spawn_egg": "Cabbager Spawn Egg",
 	"item.ravageandcabbage.ravager_spawn_egg": "Ravager Spawn Egg",
@@ -16,9 +17,10 @@
 	"entity.ravageandcabbage.ravager": "Ravager",
 	"entity.ravageandcabbage.cabbager": "Cabbager",
 	"entity.ravageandcabbage.cabbage": "Thrown Cabbage",
-	
-	"block.ravageandcabbage.cabbage_crop": "Cabbage Crop",
+	"entity.ravageandcabbage.ill_cabbage": "Thrown Ill Cabbage",
 
-	"key.ravageandcabbage.attack_key": "Attack",
+	"block.ravageandcabbage.cabbage_crop": "Cabbage",
+
+	"key.ravageandcabbage.attack_key": "Ravager Attack",
 	"key.category.ravageandcabbage": "Ravage and Cabbage"
 }
