@@ -45,7 +45,17 @@
             }
           ],
           "name": "ravageandcabbage:cabbage_seeds"
-        }
+        },
+		{
+			"type": "minecraft:item",
+			"conditions": [
+            {
+              "chance": 0.02,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "name": "ravageandcabbage:corrupted_cabbage_seeds"
+		}
       ],
       "conditions": [
         {
