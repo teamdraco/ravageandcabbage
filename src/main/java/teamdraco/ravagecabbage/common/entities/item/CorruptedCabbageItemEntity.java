@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import teamdraco.ravagecabbage.common.entities.CorruptedVillager;
 import teamdraco.ravagecabbage.registry.RCEntities;
@@ -42,14 +41,12 @@ public class CorruptedCabbageItemEntity extends ThrowableItemProjectile {
 	}
 
 	protected void onHitEntity(EntityHitResult p_213868_1_) {
-		if (p_213868_1_.getEntity().getType() == EntityType.VILLAGER) {
-			Villager villager = (Villager) p_213868_1_.getEntity();
+		if (p_213868_1_.getEntity() instanceof Villager villager && !villager.isBaby()) {
 			CorruptedVillager corrupted = new CorruptedVillager(RCEntities.CORRUPTED_VILLAGER.get(), this.getLevel());
-			Vec3 pos = new Vec3(villager.getX(), villager.getY(), villager.getZ());
-			corrupted.setPos(pos);
+			corrupted.setPos(villager.position());
 			corrupted.setVillagerData(villager.getVillagerData());
 			level.addFreshEntity(corrupted);
-			villager.remove(RemovalReason.DISCARDED);
+			villager.discard();
 		} else {
 			p_213868_1_.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), 2);
 		}
