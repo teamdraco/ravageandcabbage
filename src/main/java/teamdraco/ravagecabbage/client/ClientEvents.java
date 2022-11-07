@@ -49,7 +49,6 @@ public class ClientEvents {
         EntityRenderers.register(RCEntities.CORRUPTED_CABBAGE.get(), ThrownItemRenderer::new);
 
         ItemBlockRenderTypes.setRenderLayer(RCBlocks.CABBAGE_CROP.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(RCBlocks.CORRUPTED_CABBAGE_CROP.get(), RenderType.cutout());
     }
 
     @SubscribeEvent

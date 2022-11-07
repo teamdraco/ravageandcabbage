@@ -4,7 +4,6 @@
 	"item.ravageandcabbage.cabbage": "Cabbage",
 	"item.ravageandcabbage.cabbage_seeds": "Cabbage Seeds",
 	"item.ravageandcabbage.corrupted_cabbage": "Corrupted Cabbage",
-	"item.ravageandcabbage.corrupted_cabbage_seeds": "Corrupted Cabbage Seeds",
 	"item.ravageandcabbage.ravager_milk": "Ravager Milk Bucket",
 	"item.ravageandcabbage.leather_horn_armor": "Leather Horn Armor",
 	"item.ravageandcabbage.golden_horn_armor": "Golden Horn Armor",
@@ -18,7 +17,7 @@
 	"entity.ravageandcabbage.ravager": "Ravager",
 	"entity.ravageandcabbage.cabbager": "Cabbager",
 	"entity.ravageandcabbage.cabbage": "Thrown Cabbage",
-	"entity.ravageandcabbage.corrupted_cabbage": "Corrupted Cabbage",
+	"entity.ravageandcabbage.corrupted_cabbage": "Ill Cabbage",
 	
  	"entity.ravageandcabbage.corrupted_villager.armorer": "Corrupted Armorer",
 	"entity.ravageandcabbage.corrupted_villager.butcher": "Corrupted Butcher",
@@ -38,7 +37,6 @@
 	"entity.ravageandcabbage.corrupted_villager": "Corrupted Villager",
 	
 	"block.ravageandcabbage.cabbage_crop": "Cabbage Crop",
-	"block.ravageandcabbage.corrupted_cabbage_crop": "Corrupted Cabbage Crop",
 
 	"key.ravageandcabbage.attack_key": "Attack",
 	"key.category.ravageandcabbage": "Ravage and Cabbage"

@@ -22,7 +22,6 @@ public class RCItems {
     public static final RegistryObject<Item> CABBAGE = REGISTER.register("cabbage", () -> new Item(new Item.Properties().tab(RavageAndCabbage.GROUP).food(new FoodProperties.Builder().nutrition(3).saturationMod(0.3F).build())));
     public static final RegistryObject<Item> CABBAGE_SEEDS = REGISTER.register("cabbage_seeds", () -> new ItemNameBlockItem(RCBlocks.CABBAGE_CROP.get(), new Item.Properties().tab(RavageAndCabbage.GROUP)));
     public static final RegistryObject<Item> CORRUPTED_CABBAGE = REGISTER.register("corrupted_cabbage", () -> new CorruptedCabbageItem(new Item.Properties().tab(RavageAndCabbage.GROUP)));
-    public static final RegistryObject<Item> CORRUPTED_CABBAGE_SEEDS = REGISTER.register("corrupted_cabbage_seeds", () -> new ItemNameBlockItem(RCBlocks.CORRUPTED_CABBAGE_CROP.get(), new Item.Properties().tab(RavageAndCabbage.GROUP)));
     public static final RegistryObject<Item> RAVAGER_MILK = REGISTER.register("ravager_milk", () -> new RavagerMilkItem(new Item.Properties().tab(RavageAndCabbage.GROUP).stacksTo(1)));
     public static final RegistryObject<Item> CABBAGE_THROWABLE = REGISTER.register("throwable_cabbage", () -> new ThrowableCabbageItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LEATHER_HORN_ARMOR = REGISTER.register("leather_horn_armor", () -> new DyeableRavagerHornArmorItem(1, "leather", new Item.Properties().tab(RavageAndCabbage.GROUP).durability(45)));

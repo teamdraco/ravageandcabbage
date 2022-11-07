@@ -67,8 +67,6 @@ public class CorruptedVillager extends Villager {
 
 	public void tick() {
 		super.tick();
-		System.out.println(corruptionTick);
-		System.out.println(healthTick);
 		if (corruptionTick % 10 == 0 && !this.isCuring()) {
 			this.addParticlesAroundSelf(ParticleTypes.SPLASH);
 		} else {
