@@ -1,0 +1,45 @@
+{
+	"itemGroup.ravageandcabbage": "Ravage & Cabbage",
+	
+	"item.ravageandcabbage.cabbage": "Капуста",
+	"item.ravageandcabbage.cabbage_seeds": "Насіння купусти",
+	"item.ravageandcabbage.corrupted_cabbage": "Зіпсована капуста",
+	"item.ravageandcabbage.corrupted_cabbage_seeds": "Насіння зіпсованої капусти",
+	"item.ravageandcabbage.ravager_milk": "Відро молока руйнівника",
+	"item.ravageandcabbage.leather_horn_armor": "Шкіряний обладунок на ріг",
+	"item.ravageandcabbage.golden_horn_armor": "Золотий обладунок на ріг",
+	"item.ravageandcabbage.iron_horn_armor": "Залізний обладунок на ріг",
+	"item.ravageandcabbage.diamond_horn_armor": "Діамантовий обладунок на ріг",
+	"item.ravageandcabbage.netherite_horn_armor": "Незеритовий обладунок на ріг",
+
+	"item.ravageandcabbage.cabbager_spawn_egg": "Яйце виклику капустянника",
+	"item.ravageandcabbage.ravager_spawn_egg": "Яйце виклику руйнівника",
+
+	"entity.ravageandcabbage.ravager": "Руйнівник",
+	"entity.ravageandcabbage.cabbager": "Капустянник",
+	"entity.ravageandcabbage.cabbage": "Капуста",
+	"entity.ravageandcabbage.corrupted_cabbage": "Зіпсована капуста",
+	
+ 	"entity.ravageandcabbage.corrupted_villager.armorer": "Зіпсований латник",
+	"entity.ravageandcabbage.corrupted_villager.butcher": "Зіпсований м'ясник",
+	"entity.ravageandcabbage.corrupted_villager.cartographer": "Зіпсований картограф",
+	"entity.ravageandcabbage.corrupted_villager.cleric": "Зіпсований церковник",
+	"entity.ravageandcabbage.corrupted_villager.farmer": "Зіпсований фермер",
+	"entity.ravageandcabbage.corrupted_villager.fisherman": "Зіпсований рибак",
+	"entity.ravageandcabbage.corrupted_villager.fletcher": "Зіпсований лучник",
+	"entity.ravageandcabbage.corrupted_villager.leatherworker": "Зіпсований чинбар",
+	"entity.ravageandcabbage.corrupted_villager.librarian": "Зіпсований бібліотекар",
+	"entity.ravageandcabbage.corrupted_villager.mason": "Зіпсований каменяр",
+	"entity.ravageandcabbage.corrupted_villager.none": "Зіпсований селянин",
+	"entity.ravageandcabbage.corrupted_villager.nitwit": "Зіпсований селюк",
+	"entity.ravageandcabbage.corrupted_villager.shepherd": "Зіпсований пастух",
+	"entity.ravageandcabbage.corrupted_villager.toolsmith": "Зіпсований коваль",
+	"entity.ravageandcabbage.corrupted_villager.weaponsmith": "Зіпсований зброяр",
+	"entity.ravageandcabbage.corrupted_villager": "Зіпсований селянин",
+	
+	"block.ravageandcabbage.cabbage_crop": "Урожай капусти",
+	"block.ravageandcabbage.corrupted_cabbage_crop": "Урожай зіпсованох капусти",
+
+	"key.ravageandcabbage.attack_key": "Атакувати",
+	"key.category.ravageandcabbage": "Ravage and Cabbage"
+}
