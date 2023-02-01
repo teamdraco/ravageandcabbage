@@ -70,20 +70,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
-          "name": "ravageandcabbage:corrupted_cabbage_seeds",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
         }
       ]
     }
