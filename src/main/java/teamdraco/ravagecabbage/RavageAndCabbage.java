@@ -1,6 +1,5 @@
 package teamdraco.ravagecabbage;
 
-import net.minecraft.world.level.block.ComposterBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
+import teamdraco.ravagecabbage.common.entities.CorruptedVillager;
 import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
 import teamdraco.ravagecabbage.network.RCNetwork;
 import teamdraco.ravagecabbage.registry.RCBlocks;
@@ -29,7 +29,7 @@ public class RavageAndCabbage {
 
 		bus.addListener(this::registerCommon);
 		bus.addListener(this::registerEntityAttributes);
-		bus.addListener(this::setup);
+		bus.addListener(this::addRaider);
 
 		RCEntities.REGISTER.register(bus);
 		RCItems.REGISTER.register(bus);
@@ -40,17 +40,16 @@ public class RavageAndCabbage {
 		RCNetwork.init();
 	}
 
-	private void setup(FMLCommonSetupEvent event) {
+	private void addRaider(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			Raid.RaiderType.create("cabbager", RCEntities.CABBAGER.get(), new int[] {0, 1, 2, 2, 1, 2, 2, 3 });
-			ComposterBlock.COMPOSTABLES.put(RCItems.CABBAGE.get().asItem(), 0.65F);
-			ComposterBlock.COMPOSTABLES.put(RCItems.CABBAGE_SEEDS.get().asItem(), 0.3F);
 		});
 	}
 
 	private void registerEntityAttributes(EntityAttributeCreationEvent event) {
 		event.put(RCEntities.CABBAGER.get(), CabbagerEntity.createAttributes().build());
 		event.put(RCEntities.RAVAGER.get(), RCRavagerEntity.createAttributes().build());
+		event.put(RCEntities.CORRUPTED_VILLAGER.get(), CorruptedVillager.createAttributes().build());
 	}
 
 	public final static CreativeModeTab GROUP = new CreativeModeTab(MOD_ID) {

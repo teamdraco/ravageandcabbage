@@ -5,11 +5,11 @@
   ],
   "key": {
     "i": {
-      "item": "minecraft:leather"
+      "item": "minecraft:iron_ingot"
     }
   },
   "result": {
-    "item": "ravageandcabbage:leather_horn_armor",
+    "item": "ravageandcabbage:iron_horn_armor",
     "count": 1
   }
 }

@@ -9,7 +9,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 import teamdraco.ravagecabbage.common.entities.RCRavagerEntity;
-import teamdraco.ravagecabbage.common.items.RavagerHornArmorItem;
 
 import java.util.function.Supplier;
 
@@ -41,8 +40,10 @@ public class KeyInputMessage {
                         ravager.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
                         for (Entity entity : ravager.level.getEntitiesOfClass(LivingEntity.class, ravager.getBoundingBox().inflate(4.0D))) {
                             if (!(entity instanceof RCRavagerEntity) && !(entity instanceof Player)) {
-                                entity.hurt(DamageSource.mobAttack(ravager), ((RavagerHornArmorItem) ravager.getItemBySlot(EquipmentSlot.HEAD).getItem()).getArmorValue());
-                                ravager.getItemBySlot(EquipmentSlot.HEAD).hurtAndBreak(1, ravager, (p_213613_1_) -> p_213613_1_.broadcastBreakEvent(EquipmentSlot.HEAD));
+                                entity.hurt(DamageSource.mobAttack(ravager), 4.0F);
+                                ravager.getItemBySlot(EquipmentSlot.HEAD).hurtAndBreak(1, ravager, (p_213613_1_) -> {
+                                    p_213613_1_.broadcastBreakEvent(EquipmentSlot.HEAD);
+                                });
                             }
                         }
                     }

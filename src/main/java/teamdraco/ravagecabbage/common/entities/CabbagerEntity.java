@@ -1,5 +1,7 @@
 package teamdraco.ravagecabbage.common.entities;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
@@ -42,6 +44,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import teamdraco.ravagecabbage.common.entities.item.CabbageItemEntity;
+import teamdraco.ravagecabbage.common.entities.item.CorruptedCabbageItemEntity;
 import teamdraco.ravagecabbage.registry.RCItems;
 
 public class CabbagerEntity extends AbstractIllager implements RangedAttackMob {
@@ -94,15 +97,29 @@ public class CabbagerEntity extends AbstractIllager implements RangedAttackMob {
 	}
 
 	public void performRangedAttack(LivingEntity target, float distanceFactor) {
-		CabbageItemEntity cabbageEntity = new CabbageItemEntity(this.level, this);
-		double d0 = target.getEyeY() - (double)1.1F;
-		double d1 = target.getX() - this.getX();
-		double d2 = d0 - cabbageEntity.getY();
-		double d3 = target.getZ() - this.getZ();
-		float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
-		cabbageEntity.shoot(d1, d2 + (double)f, d3, 1.6F, 12.0F);
-		this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-		this.level.addFreshEntity(cabbageEntity);
+		Random random = new Random();
+		int corruptionChance = random.nextInt(3);
+		if (target.getType() == EntityType.VILLAGER && corruptionChance == 0) {
+			CorruptedCabbageItemEntity cabbageEntity = new CorruptedCabbageItemEntity(this.level, this);
+			double d0 = target.getEyeY() - (double)1.1F;
+			double d1 = target.getX() - this.getX();
+			double d2 = d0 - cabbageEntity.getY();
+			double d3 = target.getZ() - this.getZ();
+			float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
+			cabbageEntity.shoot(d1, d2 + (double)f, d3, 1.6F, 12.0F);
+			this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+			this.level.addFreshEntity(cabbageEntity);
+		} else {
+			CabbageItemEntity cabbageEntity = new CabbageItemEntity(this.level, this);
+			double d0 = target.getEyeY() - (double)1.1F;
+			double d1 = target.getX() - this.getX();
+			double d2 = d0 - cabbageEntity.getY();
+			double d3 = target.getZ() - this.getZ();
+			float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
+			cabbageEntity.shoot(d1, d2 + (double)f, d3, 1.6F, 12.0F);
+			this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+			this.level.addFreshEntity(cabbageEntity);
+		}
 	}
 
 	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
@@ -171,10 +188,10 @@ public class CabbagerEntity extends AbstractIllager implements RangedAttackMob {
 	public SoundEvent getCelebrateSound() {
 		return SoundEvents.PILLAGER_CELEBRATE;
 	}
-	
+
 	@Override
-    public ItemStack getPickedResult(HitResult target) {
-        return new ItemStack(RCItems.CABBAGER_SPAWN_EGG.get());
-    }
+	public ItemStack getPickedResult(HitResult target) {
+		return new ItemStack(RCItems.CABBAGER_SPAWN_EGG.get());
+	}
 
 }

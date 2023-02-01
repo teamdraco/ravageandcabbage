@@ -1,5 +1,13 @@
 package teamdraco.ravagecabbage.common.entities;
 
+import static net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -15,10 +23,26 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.ItemBasedSteering;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.Saddleable;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
@@ -54,13 +78,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import teamdraco.ravagecabbage.common.items.IRavagerHornArmorItem;
 import teamdraco.ravagecabbage.registry.RCEntities;
 import teamdraco.ravagecabbage.registry.RCItems;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
-
-import static net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent;
 
 public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Saddleable {
 	private static final Predicate<Entity> NO_RAVAGER_AND_ALIVE = (p_213685_0_) -> p_213685_0_.isAlive() && !(p_213685_0_ instanceof RCRavagerEntity);

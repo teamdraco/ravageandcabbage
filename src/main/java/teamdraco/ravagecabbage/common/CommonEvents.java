@@ -25,7 +25,7 @@ public class CommonEvents {
         if (!event.isCanceled() && itemstack.getItem() == Items.BUCKET && event.getTarget() instanceof Ravager ravager) {
             if (ravager.stunnedTick > 0) {
 
-                event.getPlayer().playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+                event.getEntity().playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
                 if (!event.getPlayer().isCreative()) {
                     itemstack.shrink(1);
                 }

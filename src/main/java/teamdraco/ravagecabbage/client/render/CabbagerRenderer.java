@@ -9,12 +9,14 @@ import teamdraco.ravagecabbage.client.ClientEvents;
 import teamdraco.ravagecabbage.client.model.CabbagerModel;
 import teamdraco.ravagecabbage.common.entities.CabbagerEntity;
 
+@SuppressWarnings("rawtypes")
 public class CabbagerRenderer extends MobRenderer<CabbagerEntity, EntityModel<CabbagerEntity>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/cabbager.png");
 	
+    @SuppressWarnings({ "unchecked" })
 	public CabbagerRenderer(EntityRendererProvider.Context context) {
-        super(context, new CabbagerModel<>(context.bakeLayer(ClientEvents.CABBAGER)), 0.5F);
+        super(context, new CabbagerModel(context.bakeLayer(ClientEvents.CABBAGER)), 0.5F);
     }
 
 	@Override

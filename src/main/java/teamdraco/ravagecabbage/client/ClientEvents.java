@@ -21,6 +21,7 @@ import teamdraco.ravagecabbage.RavageAndCabbage;
 import teamdraco.ravagecabbage.client.model.CabbagerModel;
 import teamdraco.ravagecabbage.client.model.RCRavagerModel;
 import teamdraco.ravagecabbage.client.render.CabbagerRenderer;
+import teamdraco.ravagecabbage.client.render.CorruptedVillagerRenderer;
 import teamdraco.ravagecabbage.client.render.RCRavagerRenderer;
 import teamdraco.ravagecabbage.common.items.DyeableRavagerHornArmorItem;
 import teamdraco.ravagecabbage.network.KeyInputMessage;
@@ -32,17 +33,19 @@ import teamdraco.ravagecabbage.registry.RCKeybinds;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
+
 	public static ModelLayerLocation CABBAGER = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "cabbager"), "cabbager");
 	public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager"), "ravager");
 	public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager_saddle"), "ravager_saddle");
 	public static ModelLayerLocation RAVAGER_HORNS = new ModelLayerLocation(new ResourceLocation(RavageAndCabbage.MOD_ID, "ravager_horns"), "ravager_horns");
 
-    @SubscribeEvent
+	@SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         RCKeybinds.register(event);
 
         EntityRenderers.register(RCEntities.CABBAGE.get(), ThrownItemRenderer::new);
-        EntityRenderers.register(RCEntities.ILL_CABBAGE.get(), ThrownItemRenderer::new);
+        EntityRenderers.register(RCEntities.CORRUPTED_CABBAGE.get(), ThrownItemRenderer::new);
+
         ItemBlockRenderTypes.setRenderLayer(RCBlocks.CABBAGE_CROP.get(), RenderType.cutout());
     }
 
@@ -50,6 +53,7 @@ public class ClientEvents {
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(RCEntities.CABBAGER.get(), CabbagerRenderer::new);
         event.registerEntityRenderer(RCEntities.RAVAGER.get(), RCRavagerRenderer::new);
+        event.registerEntityRenderer(RCEntities.CORRUPTED_VILLAGER.get(), CorruptedVillagerRenderer::new);
     }
     
     @SubscribeEvent
@@ -60,7 +64,7 @@ public class ClientEvents {
     	event.registerLayerDefinition(RAVAGER_HORNS, RCRavagerModel::createBodyLayer);
     }
 
-    @SubscribeEvent
+	@SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void itemColors(ColorHandlerEvent.Item event) {
         ItemColors handler = event.getItemColors();

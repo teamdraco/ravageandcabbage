@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ravageandcabbage:item/ill_cabbage"
+    "layer0": "ravageandcabbage:item/corrupted_cabbage"
   }
 }

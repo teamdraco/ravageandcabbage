@@ -5,9 +5,9 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import teamdraco.ravagecabbage.RavageAndCabbage;
-import teamdraco.ravagecabbage.registry.RCKeybinds;
-import teamdraco.ravagecabbage.network.RCNetwork;
 import teamdraco.ravagecabbage.network.KeyInputMessage;
+import teamdraco.ravagecabbage.network.RCNetwork;
+import teamdraco.ravagecabbage.registry.RCKeybinds;
 
 @Mod.EventBusSubscriber(modid = RavageAndCabbage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class InputEvents {

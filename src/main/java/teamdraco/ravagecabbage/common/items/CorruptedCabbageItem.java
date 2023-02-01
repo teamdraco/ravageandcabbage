@@ -10,12 +10,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import teamdraco.ravagecabbage.common.entities.item.CabbageItemEntity;
-import teamdraco.ravagecabbage.common.entities.item.IllCabbageItemEntity;
+import teamdraco.ravagecabbage.common.entities.item.CorruptedCabbageItemEntity;
 
-public class ThrowableIllCabbageItem extends Item {
+public class CorruptedCabbageItem extends Item {
 
-	public ThrowableIllCabbageItem(Properties properties) {
+	public CorruptedCabbageItem(Properties properties) {
 		super(properties);
 	}
 
@@ -23,7 +22,7 @@ public class ThrowableIllCabbageItem extends Item {
 	      ItemStack itemstack = playerIn.getItemInHand(handIn);
 	      worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F));
 	      if (!worldIn.isClientSide) {
-	         IllCabbageItemEntity cabbageEntity = new IllCabbageItemEntity(worldIn, playerIn);
+	         CorruptedCabbageItemEntity cabbageEntity = new CorruptedCabbageItemEntity(worldIn, playerIn);
 	         cabbageEntity.getItem();
 	         cabbageEntity.shootFromRotation(playerIn, playerIn.xRotO, playerIn.yRotO, 0.0F, 1.5F, 1.0F);
 	         worldIn.addFreshEntity(cabbageEntity);
@@ -37,4 +36,8 @@ public class ThrowableIllCabbageItem extends Item {
 	      return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
 	   }
 
+	public CorruptedCabbageItemEntity createCabbage(Level worldIn, ItemStack stack, LivingEntity shooter) {
+		CorruptedCabbageItemEntity cabbageEntity = new CorruptedCabbageItemEntity(worldIn, shooter);
+		return cabbageEntity;
+	}
 }

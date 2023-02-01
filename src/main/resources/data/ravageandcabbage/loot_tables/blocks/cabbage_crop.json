@@ -14,15 +14,12 @@
                   "condition": "minecraft:block_state_property",
                   "block": "ravageandcabbage:cabbage_crop",
                   "properties": {
-                    "age": "5"
+                    "age": "5",
+					"corrupted": false
                   }
                 }
               ],
               "name": "ravageandcabbage:cabbage"
-            },
-            {
-              "type": "minecraft:item",
-              "name": "ravageandcabbage:cabbage_seeds"
             }
           ]
         }
@@ -54,6 +51,34 @@
           "properties": {
             "age": "5"
           }
+        }
+      ]
+    },
+{
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "ravageandcabbage:cabbage_crop",
+                  "properties": {
+                    "age": "5",
+					"corrupted": true
+                  }
+                }
+              ],
+              "name": "ravageandcabbage:corrupted_cabbage"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "ravageandcabbage:cabbage_seeds"
+            }
+          ]
         }
       ]
     }

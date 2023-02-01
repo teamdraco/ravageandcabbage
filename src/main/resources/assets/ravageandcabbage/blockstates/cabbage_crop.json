@@ -1,22 +1,41 @@
 {
   "variants": {
-    "age=0": {
+    "age=0,corrupted=false": {
       "model": "ravageandcabbage:block/cabbage_crop0"
     },
-    "age=1": {
+    "age=1,corrupted=false": {
       "model": "ravageandcabbage:block/cabbage_crop1"
     },
-    "age=2": {
+    "age=2,corrupted=false": {
       "model": "ravageandcabbage:block/cabbage_crop2"
     },
-    "age=3": {
+    "age=3,corrupted=false": {
       "model": "ravageandcabbage:block/cabbage_crop3"
     },
-    "age=4": {
+    "age=4,corrupted=false": {
       "model": "ravageandcabbage:block/cabbage_crop3"
     },
-    "age=5": {
+    "age=5,corrupted=false": {
       "model": "ravageandcabbage:block/cabbage_crop4"
+    },
+
+    "age=0,corrupted=true": {
+      "model": "ravageandcabbage:block/corrupted_cabbage_crop0"
+    },
+    "age=1,corrupted=true": {
+      "model": "ravageandcabbage:block/corrupted_cabbage_crop1"
+    },
+    "age=2,corrupted=true": {
+      "model": "ravageandcabbage:block/corrupted_cabbage_crop2"
+    },
+    "age=3,corrupted=true": {
+      "model": "ravageandcabbage:block/corrupted_cabbage_crop3"
+    },
+    "age=4,corrupted=true": {
+      "model": "ravageandcabbage:block/corrupted_cabbage_crop3"
+    },
+    "age=5,corrupted=true": {
+      "model": "ravageandcabbage:block/corrupted_cabbage_crop4"
     }
   }
 }
