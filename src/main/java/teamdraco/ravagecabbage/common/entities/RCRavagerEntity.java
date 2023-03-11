@@ -88,10 +88,8 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 	private int roarTick;
 	public int attackTick;
 
-	@SuppressWarnings("deprecation")
 	public RCRavagerEntity(EntityType<? extends RCRavagerEntity> p_i50250_1_, Level p_i50250_2_) {
 		super(p_i50250_1_, p_i50250_2_);
-		this.maxUpStep = 1.0F;
 		this.navigation = new Navigator(this, level);
 	}
 
@@ -108,8 +106,13 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(3, new HurtByTargetGoal(this, Raider.class, RCRavagerEntity.class).setAlertOthers());
 		this.targetSelector.addGoal(4, new UntamedAttackGoal<>(this, Player.class, true));
-		this.targetSelector.addGoal(5, new UntamedAttackGoal<>(this, AbstractVillager.class, true));
+		this.targetSelector.addGoal(5, new UntamedAttackGoal<>(this, AbstractVillager.class, 10, true, true, e -> !(e instanceof CorruptedVillager)));
 		this.targetSelector.addGoal(5, new UntamedAttackGoal<>(this, IronGolem.class, true));
+	}
+
+	@Override
+	public float getStepHeight() {
+		return 1.0F;
 	}
 
 	public boolean isSaddled() {
@@ -122,7 +125,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 
 	public boolean hasHornArmor() {
 		ItemStack itemStackHeadSlot = this.getItemBySlot(EquipmentSlot.HEAD);
-		return (itemStackHeadSlot != null && !itemStackHeadSlot.isEmpty() && itemStackHeadSlot.getItem() instanceof IRavagerHornArmorItem);
+		return !itemStackHeadSlot.isEmpty() && itemStackHeadSlot.getItem() instanceof IRavagerHornArmorItem;
 	}
 
 	@Override
@@ -474,15 +477,15 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 	public void travel(Vec3 travelVector) {
 		if (this.isAlive()) {
 			if (this.isVehicle() && this.isSaddled()) {
-				LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
-				this.yRot = livingentity.yRot;
+				LivingEntity entity = (LivingEntity)this.getControllingPassenger();
+				this.yRot = entity.yRot;
 				this.yRotO = this.yRot;
-				this.xRot = livingentity.xRot * 0.5F;
+				this.xRot = entity.xRot * 0.5F;
 				this.setRot(this.yRot, this.xRot);
 				this.yBodyRot = this.yRot;
 				this.yHeadRot = this.yBodyRot;
-				float f = livingentity.xxa * 0.5F;
-				float f1 = livingentity.zza;
+				float f = entity.xxa * 0.5F;
+				float f1 = entity.zza;
 				if (f1 <= 0.0F) {
 					f1 *= 0.5F;
 				}
@@ -490,7 +493,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 				if (this.isControlledByLocalInstance()) {
 					this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED) / 2);
 					super.travel(new Vec3(f, travelVector.y, f1));
-				} else if (livingentity instanceof Player) {
+				} else if (entity instanceof Player) {
 					this.setDeltaMovement(Vec3.ZERO);
 				}
 
@@ -652,7 +655,6 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 	}
 
 	static class UntamedAttackGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
-
 		RCRavagerEntity goalOwner;
 
 		public UntamedAttackGoal(RCRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight) {
@@ -660,7 +662,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 		}
 
 		public UntamedAttackGoal(RCRavagerEntity goalOwnerIn, Class<T> targetClassIn, boolean checkSight, boolean nearbyOnlyIn) {
-			this(goalOwnerIn, targetClassIn, 10, checkSight, nearbyOnlyIn, (Predicate<LivingEntity>)null);
+			this(goalOwnerIn, targetClassIn, 10, checkSight, nearbyOnlyIn, null);
 		}
 
 		public UntamedAttackGoal(RCRavagerEntity goalOwnerIn, Class<T> targetClassIn, int targetChanceIn, boolean checkSight, boolean nearbyOnlyIn, @Nullable Predicate<LivingEntity> targetPredicate) {
@@ -669,23 +671,7 @@ public class RCRavagerEntity extends TamableAnimal implements PlayerRideable, Sa
 		}
 
 		public boolean canUse() {
-			if (super.canUse() && !goalOwner.isBaby() && !goalOwner.isTame()) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		public void stop() {
-			super.stop();
-		}
-
-		public boolean canContinueToUse() {
-			if (super.canContinueToUse()) {
-				return true;
-			} else {
-				return false;
-			}
+			return super.canUse() && !goalOwner.isBaby() && !goalOwner.isTame();
 		}
 
 	}
