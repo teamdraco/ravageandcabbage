@@ -20,11 +20,9 @@ import net.minecraft.world.phys.Vec3;
 import teamdraco.ravagecabbage.registry.RCEntities;
 
 public class CorruptedVillager extends Villager {
-
 	int corruptionTick = 1800;
 	int healthTick = 1800;
 	private static final EntityDataAccessor<Boolean> CURING = SynchedEntityData.defineId(CorruptedVillager.class, EntityDataSerializers.BOOLEAN);
-
 
 	public CorruptedVillager(EntityType<? extends Villager> p_35381_, Level p_35382_) {
 		super(p_35381_, p_35382_);
@@ -62,8 +60,6 @@ public class CorruptedVillager extends Villager {
 		this.setVillagerData(this.getVillagerData().setType(VillagerType.byBiome(p_34378_.getBiome(this.blockPosition()))));
 		return super.finalizeSpawn(p_34378_, p_34379_, p_34380_, p_34381_, p_34382_);
 	}
-
-
 
 	public void tick() {
 		super.tick();

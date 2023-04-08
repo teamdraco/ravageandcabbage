@@ -57,14 +57,14 @@ public class CabbagerEntity extends AbstractIllager implements RangedAttackMob {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(1, new RangedAttackGoal(this, 1.25D, 20, 10.0F));
+		this.goalSelector.addGoal(1, new RangedAttackGoal(this, 1.25D, 0, 40, 10.0F));
 		this.goalSelector.addGoal(2, new PathfindToRaidGoal<>(this));
 		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.6D));
 		this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 15.0F, 1.0F));
 		this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Mob.class, 15.0F));
-		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
+		this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class).setAlertOthers());
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, e -> !(e instanceof CorruptedVillager)));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
 	}
 
