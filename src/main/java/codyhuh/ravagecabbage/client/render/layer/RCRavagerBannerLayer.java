@@ -24,10 +24,14 @@ import net.minecraft.world.level.block.entity.BannerBlockEntity;
 
 public class RCRavagerBannerLayer extends RenderLayer<RCRavagerEntity, RCRavagerModel> {
     private final ModelPart flag;
+    private final ModelPart pole;
+    private final ModelPart bar;
 
     public RCRavagerBannerLayer(RenderLayerParent<RCRavagerEntity, RCRavagerModel> entityRendererIn) {
         super(entityRendererIn);
         this.flag = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("flag");
+        this.pole = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("pole");
+        this.bar = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("bar");
     }
 
     @Override
@@ -46,11 +50,15 @@ public class RCRavagerBannerLayer extends RenderLayer<RCRavagerEntity, RCRavager
                 stack.mulPose(Axis.YP.rotationDegrees(-90.0F));
                 stack.translate(-0.5F, -0.5F, -0.5F);
                 BannerRenderer.renderPatterns(stack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, flag, ModelBakery.BANNER_BASE, true, BannerBlockEntity.createPatterns(((BannerItem)itemstack.getItem()).getColor(), BannerBlockEntity.getItemPatterns(itemstack)));
+                BannerRenderer.renderPatterns(stack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, pole, ModelBakery.BANNER_BASE, true, BannerBlockEntity.createPatterns(((BannerItem)itemstack.getItem()).getColor(), BannerBlockEntity.getItemPatterns(itemstack)));
+                BannerRenderer.renderPatterns(stack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, bar, ModelBakery.BANNER_BASE, true, BannerBlockEntity.createPatterns(((BannerItem)itemstack.getItem()).getColor(), BannerBlockEntity.getItemPatterns(itemstack)));
 
                 stack.pushPose();
                 modelpart.translateAndRotate(stack);
                 stack.translate(0.0F, 0.0F, -3.06F);
                 BannerRenderer.renderPatterns(stack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, flag, ModelBakery.BANNER_BASE, true, BannerBlockEntity.createPatterns(((BannerItem)itemstack.getItem()).getColor(), BannerBlockEntity.getItemPatterns(itemstack)));
+                BannerRenderer.renderPatterns(stack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, pole, ModelBakery.BANNER_BASE, true, BannerBlockEntity.createPatterns(((BannerItem)itemstack.getItem()).getColor(), BannerBlockEntity.getItemPatterns(itemstack)));
+                BannerRenderer.renderPatterns(stack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, bar, ModelBakery.BANNER_BASE, true, BannerBlockEntity.createPatterns(((BannerItem)itemstack.getItem()).getColor(), BannerBlockEntity.getItemPatterns(itemstack)));
                 stack.popPose();
 
                 stack.popPose();
