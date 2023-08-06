@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RCRavagerHornLayer<T extends RCRavagerEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private RCRavagerModel model;
+    private final RCRavagerModel model;
 
     public RCRavagerHornLayer(RenderLayerParent<T, M> entityRendererIn, RCRavagerModel model) {
         super(entityRendererIn);
@@ -31,8 +31,7 @@ public class RCRavagerHornLayer<T extends RCRavagerEntity, M extends EntityModel
 	@Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemStack itemstack = entity.getItemBySlot(EquipmentSlot.HEAD);
-        if (itemstack.getItem() instanceof RavagerHornArmorItem) {
-            RavagerHornArmorItem armor = (RavagerHornArmorItem)itemstack.getItem();
+        if (itemstack.getItem() instanceof RavagerHornArmorItem armor) {
             this.getParentModel().copyPropertiesTo((EntityModel<T>) this.model);
             this.model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
             this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);

@@ -1,7 +1,7 @@
 package codyhuh.ravagecabbage.client.render;
 
 import codyhuh.ravagecabbage.client.model.RCRavagerModel;
-import net.minecraft.client.model.EntityModel;
+import codyhuh.ravagecabbage.client.render.layer.RCRavagerBannerLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.SaddleLayer;
@@ -11,18 +11,17 @@ import codyhuh.ravagecabbage.client.ClientEvents;
 import codyhuh.ravagecabbage.client.render.layer.RCRavagerHornLayer;
 import codyhuh.ravagecabbage.common.entities.RCRavagerEntity;
 
-@SuppressWarnings("rawtypes")
-public class RCRavagerRenderer extends MobRenderer<RCRavagerEntity, EntityModel<RCRavagerEntity>> {
+public class RCRavagerRenderer extends MobRenderer<RCRavagerEntity, RCRavagerModel> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/tamed_ravager.png");
 	private static final ResourceLocation SADDLE_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_equipment/saddle.png");
     private static final ResourceLocation BABY_TEXTURE = new ResourceLocation(RavageAndCabbage.MOD_ID, "textures/entity/ravager_baby.png");
 
-	@SuppressWarnings({ "unchecked" })
 	public RCRavagerRenderer(EntityRendererProvider.Context context) {
 		super(context, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER)), 1.1F);
-		this.addLayer(new SaddleLayer(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_SADDLE)), SADDLE_TEXTURE));
-		this.addLayer(new RCRavagerHornLayer(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_HORNS))));
+		this.addLayer(new SaddleLayer<>(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_SADDLE)), SADDLE_TEXTURE));
+		this.addLayer(new RCRavagerBannerLayer(this));
+		this.addLayer(new RCRavagerHornLayer<>(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_HORNS))));
 	}
 
 	@Override

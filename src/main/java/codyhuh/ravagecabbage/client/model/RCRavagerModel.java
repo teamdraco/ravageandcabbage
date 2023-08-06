@@ -18,7 +18,7 @@ import codyhuh.ravagecabbage.common.entities.RCRavagerEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class RCRavagerModel extends AgeableListModel<RCRavagerEntity> {
-	private final ModelPart root;
+	public final ModelPart root;
 	private final ModelPart head;
 	private final ModelPart mouth;
 	private final ModelPart rightHindLeg;
