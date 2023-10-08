@@ -20,7 +20,7 @@ public class RCRavagerRenderer extends MobRenderer<RCRavagerEntity, RCRavagerMod
 	public RCRavagerRenderer(EntityRendererProvider.Context context) {
 		super(context, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER)), 1.1F);
 		this.addLayer(new SaddleLayer<>(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_SADDLE)), SADDLE_TEXTURE));
-		this.addLayer(new RCRavagerBannerLayer(this));
+		//this.addLayer(new RCRavagerBannerLayer(this));
 		this.addLayer(new RCRavagerHornLayer<>(this, new RCRavagerModel(context.bakeLayer(ClientEvents.RAVAGER_HORNS))));
 	}
 
