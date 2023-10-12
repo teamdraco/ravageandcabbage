@@ -1,0 +1,24 @@
+{
+	"itemGroup.ravageandcabbage_item_group": "Ravage & Cabbage",
+	
+	"item.ravageandcabbage.cabbage": "Repollo",
+	"item.ravageandcabbage.cabbage_seeds": "Semillas de repollo",
+	"item.ravageandcabbage.ravager_milk": "Cubo con leche de devastador",
+	"item.ravageandcabbage.leather_horn_armor": "Cuerno de cuero",
+	"item.ravageandcabbage.golden_horn_armor": "Cuerno de oro",
+	"item.ravageandcabbage.iron_horn_armor": "Cuerno de hierro",
+	"item.ravageandcabbage.diamond_horn_armor": "Cuerno de diamante",
+	"item.ravageandcabbage.netherite_horn_armor": "Cuerno de netherita",
+
+	"item.ravageandcabbage.cabbager_spawn_egg": "Generar hortelano",
+	"item.ravageandcabbage.ravager_spawn_egg": "Generar devastador pasivo",
+
+	"entity.ravageandcabbage.ravager": "Devastador pasivo",
+	"entity.ravageandcabbage.cabbager": "Hortelano",
+	"entity.ravageandcabbage.cabbage": "Repollo",
+	
+	"block.ravageandcabbage.cabbage_crop": "Cultivo de repollo",
+
+	"key.ravageandcabbage.attack_key": "Ataque",
+	"key.category.ravageandcabbage": "Ravage and Cabbage"
+}
